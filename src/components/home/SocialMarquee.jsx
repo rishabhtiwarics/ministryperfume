@@ -1,15 +1,14 @@
 import React from 'react';
 import { Instagram } from 'lucide-react';
+import inst1 from '../../../img/instgramimg/inst1.png';
+import inst2 from '../../../img/instgramimg/inst2.png';
+import inst3 from '../../../img/instgramimg/inst3.png';
+import inst4 from '../../../img/instgramimg/inst4.png';
+import inst5 from '../../../img/instgramimg/inst5.png';
+import inst6 from '../../../img/instgramimg/inst6.png';
+import inst7 from '../../../img/instgramimg/inst7.png';
 
-const images = [
-  '/img/instgramimg/inst1.png',
-  '/img/instgramimg/inst2.png',
-  '/img/instgramimg/inst3.png',
-  '/img/instgramimg/inst4.png',
-  '/img/instgramimg/inst5.png',
-  '/img/instgramimg/inst6.png',
-  '/img/instgramimg/inst7.png'
-];
+const images = [inst1, inst2, inst3, inst4, inst5, inst6, inst7];
 
 export default function SocialMarquee() {
   const row = [...images, ...images, ...images];

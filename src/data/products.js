@@ -9,7 +9,7 @@ import productImg2 from '../../img/productimg2.jpeg';
 import productImg3 from '../../img/productimg3.jpeg';
 import productImg4 from '../../img/productimg4.jpeg';
 import reel1 from '../../img/reel1.mp4';
-import reel2 from '../../img/reel2.MP4';
+import reel2 from '../../img/reel2.mp4';
 import reel3 from '../../img/reel3.mp4';
 import reel4 from '../../img/reel4.mp4';
 import reel5 from '../../img/reel5.mp4';
