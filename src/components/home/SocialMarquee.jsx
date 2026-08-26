@@ -2,11 +2,13 @@ import React from 'react';
 import { Instagram } from 'lucide-react';
 
 const images = [
-  'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=500&q=85',
-  'https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=500&q=85',
-  'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=500&q=85',
-  'https://images.unsplash.com/photo-1619994403073-2cec844b8e63?auto=format&fit=crop&w=500&q=85',
-  'https://images.unsplash.com/photo-1590736704728-f4730bb30770?auto=format&fit=crop&w=500&q=85'
+  '/img/instgramimg/inst1.png',
+  '/img/instgramimg/inst2.png',
+  '/img/instgramimg/inst3.png',
+  '/img/instgramimg/inst4.png',
+  '/img/instgramimg/inst5.png',
+  '/img/instgramimg/inst6.png',
+  '/img/instgramimg/inst7.png'
 ];
 
 export default function SocialMarquee() {
