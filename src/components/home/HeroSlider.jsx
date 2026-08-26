@@ -1,8 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { brandAssets } from '../../data/products.js';
 
-const slides = [brandAssets.bottleLine, brandAssets.amberSet, 'https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=1800&q=90'];
+const slides = ['/img/bnner1.jpeg', '/img/bnner2.jpeg', '/img/bnner3.jpeg'];
 
 export default function HeroSlider() {
   const [active, setActive] = useState(0);
