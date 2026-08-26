@@ -23,7 +23,7 @@ export default function FavouriteReels() {
           watchOverflow
           breakpoints={{
             768: { slidesPerView: 3, spaceBetween: 16 },
-            992: { slidesPerView: 4, spaceBetween: 18 },
+            992: { slidesPerView: 5, spaceBetween: 18 },
             1200: { slidesPerView: 6, spaceBetween: 18 }
           }}
         >
