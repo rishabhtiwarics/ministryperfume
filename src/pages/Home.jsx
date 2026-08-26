@@ -12,5 +12,5 @@ import { brandAssets, products } from '../data/products.js';
 
 export default function Home() {
   return <><HeroSlider /><FeaturedCategories /><FavouriteReels />
-    <ProductSection eyebrow="Customer Choice" title="Best Seller" products={products.slice(1, 5)} variant="seller" bottomAction /><ImageBanner images={[brandAssets.bottleLine]} /><ProductSection eyebrow="Just Arrived" title="New Arrivals" products={products.slice(2, 6)} variant="arrival" /><ImageBanner images={[brandAssets.amberSet]} /><BenefitsStrip /><Testimonials /><SocialMarquee /><VideoSection /></>;
+    <ProductSection eyebrow="Customer Choice" title="Best Seller" products={products.slice(1, 5)} variant="seller" bottomAction /><ImageBanner images={[brandAssets.bottleLine]} /><ProductSection eyebrow="Just Arrived" title="New Arrivals" products={products.slice(2, 6)} variant="arrival" /><ImageBanner images={[brandAssets.middleBanner2]} className="middle-banner" /><BenefitsStrip /><Testimonials /><SocialMarquee /><VideoSection /></>;
 }

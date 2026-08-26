@@ -1,4 +1,6 @@
 import React from 'react';
-export default function ImageBanner({ images }) {
-  return <section className={`image-banner ${images.length > 1 ? 'split' : ''}`}>{images.map((image, index) => <img src={image} alt="Ministry perfume banner" key={index} />)}</section>;
+export default function ImageBanner({ images, className = '' }) {
+  const classes = ['image-banner', images.length > 1 ? 'split' : '', className].filter(Boolean).join(' ');
+
+  return <section className={classes}>{images.map((image, index) => <img src={image} alt="Ministry perfume banner" key={index} />)}</section>;
 }

@@ -2,6 +2,7 @@ import bottleLine from '../../img/WhatsApp Image 2026-08-25 at 11.05.44 AM.jpeg'
 import amberSet from '../../img/WhatsApp Image 2026-08-25 at 11.05.59 AM.jpeg';
 import blackLogo from '../../img/ministry_black_logo.png';
 import whiteLogo from '../../img/ministry_white_logo.png';
+import middleBanner2 from '../../img/middlebennr2.png';
 import productImg1 from '../../img/productimg1.jpeg';
 import productImg2 from '../../img/productimg2.jpeg';
 import productImg3 from '../../img/productimg3.jpeg';
@@ -16,7 +17,8 @@ export const brandAssets = {
   blackLogo,
   whiteLogo,
   bottleLine,
-  amberSet
+  amberSet,
+  middleBanner2
 };
 
 export const categories = [
