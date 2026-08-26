@@ -13,6 +13,10 @@ import reel2 from '../img/reel2.mp4';
 import reel3 from '../img/reel3.mp4';
 import reel4 from '../img/reel4.mp4';
 import reel5 from '../img/reel5.mp4';
+import category1 from '../img/categories/categorie1.jpeg';
+import category2 from '../img/categories/categorie2.jpeg';
+import category3 from '../img/categories/categorie3.jpeg';
+import category4 from '../img/categories/categorie4.jpeg';
 
 export const brandAssets = {
   blackLogo,
@@ -24,10 +28,10 @@ export const brandAssets = {
 };
 
 export const categories = [
-  { title: 'For Man', image: 'https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?auto=format&fit=crop&w=900&q=85' },
-  { title: 'For Woman', image: 'https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=900&q=85' },
-  { title: 'Combo Offer', image: bottleLine },
-  { title: 'All Fragrances', image: 'https://images.unsplash.com/photo-1619994403073-2cec844b8e63?auto=format&fit=crop&w=900&q=85' }
+  { title: 'For Man', image: category1, filter: 'Men' },
+  { title: 'For Woman', image: category2, filter: 'Women' },
+  { title: 'Combo Offer', image: category3, filter: 'Combo' },
+  { title: 'All Fragrances', image: category4, filter: 'all' }
 ];
 
 export const products = [

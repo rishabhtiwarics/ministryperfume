@@ -8,12 +8,6 @@ const BRANDS = [
   { name: 'Flipkart', img: 'https://krishnaayurved.com/cdn/shop/files/ka-flipk-logo.png?v=1775421768&width=110' }
 ];
 
-const categoryFilters = {
-  'For Man': 'Men',
-  'For Woman': 'Women',
-  'Combo Offer': 'Combo',
-  'All Fragrances': 'all'
-};
 
 export default function Footer() {
   return (
@@ -41,7 +35,7 @@ export default function Footer() {
           <h4>Categories</h4>
           <div className="footer-categories-row">
             {categories.map((cat) => {
-              const filter = categoryFilters[cat.title] || cat.title;
+              const filter = cat.filter || cat.title;
               const to = filter === 'all' ? '/shop' : `/shop?category=${encodeURIComponent(filter)}`;
               return (
                 <Link to={to} key={cat.title}>

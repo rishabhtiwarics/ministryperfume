@@ -2,7 +2,7 @@ import React from 'react';
 import { Menu, Search, UserRound, ShoppingBag, X, LayoutDashboard, LogOut, ShieldCheck, Facebook, Instagram } from 'lucide-react';
 import { NavLink, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { products, brandAssets } from '../../data/products.js';
+import { products, brandAssets, categories } from '../../data/products.js';
 import ProductCard from '../shop/ProductCard.jsx';
 import { useCart } from '../../context/CartContext.jsx';
 
@@ -94,7 +94,17 @@ function MegaMenu() {
   return (
     <div className="mega-menu">
       <div><span className="eyebrow">Shop By Mood</span><h3>Signature Ministry Perfumes</h3><p>Premium oud, fresh, floral, and gifting fragrances in one refined collection.</p></div>
-      <div className="mega-grid">{products.slice(0, 4).map((product) => <ProductCard key={product.id} product={product} variant="mini" />)}</div>
+      <div className="mega-grid mega-category-grid">
+        {categories.map((cat) => {
+          const to = cat.filter === 'all' ? '/shop' : `/shop?category=${encodeURIComponent(cat.filter)}`;
+          return (
+            <Link className="mega-category-card" to={to} key={cat.title}>
+              <img src={cat.image} alt={cat.title} />
+              <span>{cat.title}</span>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }
