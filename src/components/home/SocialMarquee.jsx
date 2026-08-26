@@ -11,18 +11,16 @@ import inst7 from '../../img/instgramimg/inst7.png';
 const images = [inst1, inst2, inst3, inst4, inst5, inst6, inst7];
 
 export default function SocialMarquee() {
-  const row = [...images, ...images, ...images];
-
+  const row = [...images, ...images];
   return (
-    <section className="section social-section">
-      <div className="center-title">
-        <span className="eyebrow">Get Inspired</span>
-        <h2>Instagram</h2>
+    <section className="social-section">
+      <div className="section-head container center-title">
+        <div><span className="eyebrow">Follow Us</span><h2>Instagram Moments</h2></div>
       </div>
       <div className="image-marquee">
         <div>
           {row.map((image, index) => (
-            <a className="social-marquee-card" href="https://www.instagram.com/" aria-label="Open Ministry Instagram" key={index}>
+            <a className="social-marquee-card" href="https://www.instagram.com/" aria-label="Open Avenlora Instagram" key={index}>
               <img src={image} alt="Instagram perfume post" />
               <span className="social-overlay"><Instagram size={26} /></span>
             </a>

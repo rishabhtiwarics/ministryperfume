@@ -26,7 +26,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <div className="header-inner container">
-        <Link to="/" className="logo"><img src={brandAssets.blackLogo} alt="Ministry" /></Link>
+        <Link to="/" className="logo"><img src={brandAssets.mainLogo} alt="Avenlora" /></Link>
         <nav className="desktop-nav">
           {links.map((link) => (
             <div className="nav-item" key={link.path}>
@@ -44,19 +44,19 @@ export default function Header() {
       </div>
       <div className={`mobile-drawer ${menuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <img src={brandAssets.whiteLogo} alt="Ministry" />
+          <img src={brandAssets.mainLogo} alt="Avenlora" />
           <button className="icon-btn sidebar-close" aria-label="Close menu" onClick={() => setMenuOpen(false)}><X size={22} /></button>
         </div>
         <div className="sidebar-main">
           <nav className="mobile-nav-list">{mobileLinks.map(({ label, path }) => <NavLink key={path} to={path} onClick={() => setMenuOpen(false)}>{label}</NavLink>)}</nav>
-          <Link className="sidebar-mini-banner" to="/shop" onClick={() => setMenuOpen(false)}><img src={brandAssets.bottleLine} alt="Ministry perfume" /></Link>
+          <Link className="sidebar-mini-banner" to="/shop" onClick={() => setMenuOpen(false)}><img src={brandAssets.bottleLine} alt="Avenlora perfume" /></Link>
           <div className="mobile-user-wrap"><UserPanel compact /></div>
         </div>
-        <div className="sidebar-footer"><span>Follow Ministry</span><div className="sidebar-socials"><a href="#" aria-label="Facebook"><Facebook size={18} /></a><a href="#" aria-label="Instagram"><Instagram size={18} /></a></div></div>
+        <div className="sidebar-footer"><span>Follow Avenlora</span><div className="sidebar-socials"><a href="#" aria-label="Facebook"><Facebook size={18} /></a><a href="#" aria-label="Instagram"><Instagram size={18} /></a></div></div>
       </div>
       <div className={`overlay ${menuOpen || searchOpen ? 'show' : ''}`} onClick={() => { setMenuOpen(false); setSearchOpen(false); }} />
       <div className={`search-panel ${searchOpen ? 'open' : ''}`}>
-        <div className="drawer-head"><strong>Search Ministry</strong><button className="icon-btn" onClick={() => setSearchOpen(false)}><X size={22} /></button></div>
+        <div className="drawer-head"><strong>Search Avenlora</strong><button className="icon-btn" onClick={() => setSearchOpen(false)}><X size={22} /></button></div>
         <label className="search-box"><Search size={18} /><input placeholder="Search perfume" autoFocus={searchOpen} /></label>
         <div className="search-results">{products.slice(0, 3).map((product) => <ProductCard key={product.id} product={product} variant="search" />)}</div>
       </div>
@@ -76,24 +76,24 @@ function UserMenu() {
 
 function UserPanel({ compact = false }) {
   const [role, setRole] = useState('guest');
-  useEffect(() => setRole(localStorage.getItem('ministryRole') || 'guest'), []);
-  const logout = () => { localStorage.removeItem('ministryRole'); setRole('guest'); };
+  useEffect(() => setRole(localStorage.getItem('avenloraRole') || 'guest'), []);
+  const logout = () => { localStorage.removeItem('avenloraRole'); setRole('guest'); };
 
   if (role === 'admin') {
-    return <div className={`user-panel ${compact ? 'compact' : ''}`}><span className="eyebrow">Admin Login</span><div className="user-row"><span className="avatar admin"><ShieldCheck size={20} /></span><div><strong>Ministry Admin</strong><small>admin@ministry.com</small></div></div><Link to="/admin/dashboard" className="user-link"><LayoutDashboard size={17} /> Dashboard</Link><Link to="/profile" className="user-link"><UserRound size={17} /> Admin User Profile</Link><button className="logout-btn" onClick={logout}><LogOut size={17} /> Logout</button></div>;
+    return <div className={`user-panel ${compact ? 'compact' : ''}`}><span className="eyebrow">Admin Login</span><div className="user-row"><span className="avatar admin"><ShieldCheck size={20} /></span><div><strong>Avenlora Admin</strong><small>admin@avenlora.com</small></div></div><Link to="/admin/dashboard" className="user-link"><LayoutDashboard size={17} /> Dashboard</Link><Link to="/profile" className="user-link"><UserRound size={17} /> Admin User Profile</Link><button className="logout-btn" onClick={logout}><LogOut size={17} /> Logout</button></div>;
   }
 
   if (role === 'user') {
-    return <div className={`user-panel ${compact ? 'compact' : ''}`}><span className="eyebrow">User Login</span><div className="user-row"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=85" alt="User" /><div><strong>Ayesha Khan</strong><small>ayesha@ministry.com</small></div></div><Link to="/profile" className="user-link"><UserRound size={17} /> User Profile</Link><button className="logout-btn" onClick={logout}><LogOut size={17} /> Logout</button></div>;
+    return <div className={`user-panel ${compact ? 'compact' : ''}`}><span className="eyebrow">User Login</span><div className="user-row"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=85" alt="User" /><div><strong>Ayesha Khan</strong><small>ayesha@avenlora.com</small></div></div><Link to="/profile" className="user-link"><UserRound size={17} /> User Profile</Link><button className="logout-btn" onClick={logout}><LogOut size={17} /> Logout</button></div>;
   }
 
-  return <div className={`user-panel ${compact ? 'compact' : ''}`}><span className="eyebrow">My Account</span><h3>Login to your Ministry account</h3><p>Access orders, saved perfumes, and faster checkout.</p><div className="auth-actions"><Link to="/auth/login" className="primary-btn">Login</Link><Link to="/auth/register" className="light-btn">Register</Link></div></div>;
+  return <div className={`user-panel ${compact ? 'compact' : ''}`}><span className="eyebrow">My Account</span><h3>Login to your Avenlora account</h3><p>Access orders, saved perfumes, and faster checkout.</p><div className="auth-actions"><Link to="/auth/login" className="primary-btn">Login</Link><Link to="/auth/register" className="light-btn">Register</Link></div></div>;
 }
 
 function MegaMenu() {
   return (
     <div className="mega-menu">
-      <div><span className="eyebrow">Shop By Mood</span><h3>Signature Ministry Perfumes</h3><p>Premium oud, fresh, floral, and gifting fragrances in one refined collection.</p></div>
+      <div><span className="eyebrow">Shop By Mood</span><h3>Signature Avenlora Perfumes</h3><p>Premium oud, fresh, floral, and gifting fragrances in one refined collection.</p></div>
       <div className="mega-grid mega-category-grid">
         {categories.map((cat) => {
           const to = cat.filter === 'all' ? '/shop' : `/shop?category=${encodeURIComponent(cat.filter)}`;

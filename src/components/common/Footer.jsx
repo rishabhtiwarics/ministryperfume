@@ -12,11 +12,11 @@ const BRANDS = [
 export default function Footer() {
   return (
     <footer className="footer">
-      <div className="footer-watermark">MINISTRY</div>
+      <div className="footer-watermark">AVENLORA</div>
       <div className="container footer-grid">
         <div className="footer-brand">
-          <img src={brandAssets.blackLogo} alt="Ministry" />
-          <p>Ministry creates premium perfumes with modern Indian warmth, refined bottles, and memorable gifting appeal.</p>
+          <img src={brandAssets.mainLogo} alt="Avenlora" />
+          <p>Avenlora creates premium perfumes crafted beyond reason, with refined bottles, lasting notes, and memorable gifting appeal.</p>
           <div className="socials"><Instagram /><Facebook /><Youtube /></div>
         </div>
         <div className="footer-market">
@@ -50,10 +50,10 @@ export default function Footer() {
           <h4>Contact</h4>
           <p><MapPin size={17} /> Delhi, India</p>
           <p><Phone size={17} /> +91 98765 43210</p>
-          <p><Mail size={17} /> hello@ministryperfume.com</p>
+          <p><Mail size={17} /> hello@avenlora.com</p>
         </div>
       </div>
-      <div className="footer-bottom">Copyright © 2026 Ministry Perfume. All rights reserved.</div>
+      <div className="footer-bottom">Copyright © 2026 Avenlora Perfume. All rights reserved.</div>
     </footer>
   );
 }

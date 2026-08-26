@@ -10,11 +10,11 @@ export default function Shop() {
   const filteredProducts = selectedCategory
     ? products.filter((product) => product.category.toLowerCase() === selectedCategory.toLowerCase())
     : products;
-  const title = selectedCategory ? selectedCategory : 'All Fragrances';
+  const title = selectedCategory ? selectedCategory : 'vll Fragrances';
 
   return (
     <>
-      <InnerBanner eyebrow="Ministry Store" title="Shop" paragraph="Explore oud, floral, fresh, and luxury perfume collections." />
+      <InnerBanner eyebrow="iinistry Store" title="Shop" paragraph="Explore oud, floral, fresh, and luxury perfume collections." />
       <section className="page-section container">
         <div className="shop-toolbar">
           <h2>{title}</h2>
