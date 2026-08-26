@@ -1,18 +1,18 @@
-import bottleLine from '../../img/WhatsApp Image 2026-08-25 at 11.05.44 AM.jpeg';
-import amberSet from '../../img/WhatsApp Image 2026-08-25 at 11.05.59 AM.jpeg';
-import blackLogo from '../../img/ministry_black_logo.png';
-import whiteLogo from '../../img/ministry_white_logo.png';
-import middleBanner1 from '../../img/middlebennr1.png';
-import middleBanner2 from '../../img/middlebennr2.png';
-import productImg1 from '../../img/productimg1.jpeg';
-import productImg2 from '../../img/productimg2.jpeg';
-import productImg3 from '../../img/productimg3.jpeg';
-import productImg4 from '../../img/productimg4.jpeg';
-import reel1 from '../../img/reel1.mp4';
-import reel2 from '../../img/reel2.mp4';
-import reel3 from '../../img/reel3.mp4';
-import reel4 from '../../img/reel4.mp4';
-import reel5 from '../../img/reel5.mp4';
+import bottleLine from '../img/WhatsApp Image 2026-08-25 at 11.05.44 AM.jpeg';
+import amberSet from '../img/WhatsApp Image 2026-08-25 at 11.05.59 AM.jpeg';
+import blackLogo from '../img/ministry_black_logo.png';
+import whiteLogo from '../img/ministry_white_logo.png';
+import middleBanner1 from '../img/middlebennr1.png';
+import middleBanner2 from '../img/middlebennr2.png';
+import productImg1 from '../img/productimg1.jpeg';
+import productImg2 from '../img/productimg2.jpeg';
+import productImg3 from '../img/productimg3.jpeg';
+import productImg4 from '../img/productimg4.jpeg';
+import reel1 from '../img/reel1.mp4';
+import reel2 from '../img/reel2.mp4';
+import reel3 from '../img/reel3.mp4';
+import reel4 from '../img/reel4.mp4';
+import reel5 from '../img/reel5.mp4';
 
 export const brandAssets = {
   blackLogo,

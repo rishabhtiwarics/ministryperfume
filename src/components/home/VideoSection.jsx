@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pause, Play, Volume2, VolumeX } from 'lucide-react';
 import { useRef, useState } from 'react';
-import videoSectionVideo from '../../../img/VideoSection-video.mp4';
+import videoSectionVideo from '../../img/VideoSection-video.mp4';
 
 export default function VideoSection() {
   const ref = useRef(null);
