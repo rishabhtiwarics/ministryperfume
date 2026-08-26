@@ -2,6 +2,10 @@ import bottleLine from '../../img/WhatsApp Image 2026-08-25 at 11.05.44 AM.jpeg'
 import amberSet from '../../img/WhatsApp Image 2026-08-25 at 11.05.59 AM.jpeg';
 import blackLogo from '../../img/ministry_black_logo.png';
 import whiteLogo from '../../img/ministry_white_logo.png';
+import productImg1 from '../../img/productimg1.jpeg';
+import productImg2 from '../../img/productimg2.jpeg';
+import productImg3 from '../../img/productimg3.jpeg';
+import productImg4 from '../../img/productimg4.jpeg';
 import reel1 from '../../img/reel1.mp4';
 import reel2 from '../../img/reel2.MP4';
 import reel3 from '../../img/reel3.mp4';
@@ -23,12 +27,12 @@ export const categories = [
 ];
 
 export const products = [
-  { id: 1, slug: 'golden-oud', name: 'Golden Oud Premium', category: 'Oud', price: 549, oldPrice: 3999, rating: 5, image: bottleLine, tone: '#ed6c06', badge: 'New Launch', description: 'Warm oud, saffron heat, polished woods, and a deep amber trail made for festive evenings.' },
-  { id: 2, slug: 'shadow-mist', name: 'Shadow Mist', category: 'Men', price: 899, oldPrice: 1299, rating: 4, image: amberSet, tone: '#bb7736', badge: 'Best Seller', description: 'Smoky spice, dark vanilla, and refined woods with a clean premium finish.' },
-  { id: 3, slug: 'ocean-veil', name: 'Ocean Veil', category: 'Fresh', price: 799, oldPrice: 1299, rating: 3.5, image: bottleLine, tone: '#1d375c', badge: 'Fresh', description: 'Citrus lift, aquatic freshness, blue woods, and soft musk for daily wear.' },
-  { id: 4, slug: 'velvet-rouge', name: 'Velvet Rouge', category: 'Women', price: 999, oldPrice: 1499, rating: 4.5, image: amberSet, tone: '#8e1c12', badge: 'Arrival', description: 'Velvet rose, red fruit, creamy amber, and sandalwood for a graceful signature.' },
-  { id: 5, slug: 'jasmine-bliss', name: 'Jasmine Bliss Premium', category: 'Floral', price: 999, oldPrice: 1299, rating: 4, image: 'https://images.unsplash.com/photo-1590736704728-f4730bb30770?auto=format&fit=crop&w=900&q=85', tone: '#bb7736', badge: 'Loved', description: 'Soft jasmine, white musk, and creamy woods with a delicate long lasting trail.' },
-  { id: 6, slug: 'luxe-oud', name: 'Luxe Oud Premium', category: 'Luxury', price: 1599, oldPrice: 2999, rating: 5, image: 'https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=900&q=85', tone: '#1d375c', badge: 'Luxury', description: 'Deep resin, rare woods, glowing amber, and a rich gift-ready character.' }
+  { id: 1, slug: 'golden-oud', name: 'Golden Oud Premium', category: 'Oud', price: 549, oldPrice: 3999, rating: 5, image: productImg1, tone: '#ed6c06', badge: 'New Launch', description: 'Warm oud, saffron heat, polished woods, and a deep amber trail made for festive evenings.' },
+  { id: 2, slug: 'shadow-mist', name: 'Shadow Mist', category: 'Men', price: 899, oldPrice: 1299, rating: 4, image: productImg2, tone: '#bb7736', badge: 'Best Seller', description: 'Smoky spice, dark vanilla, and refined woods with a clean premium finish.' },
+  { id: 3, slug: 'ocean-veil', name: 'Ocean Veil', category: 'Fresh', price: 799, oldPrice: 1299, rating: 3.5, image: productImg3, tone: '#1d375c', badge: 'Fresh', description: 'Citrus lift, aquatic freshness, blue woods, and soft musk for daily wear.' },
+  { id: 4, slug: 'velvet-rouge', name: 'Velvet Rouge', category: 'Women', price: 999, oldPrice: 1499, rating: 4.5, image: productImg4, tone: '#8e1c12', badge: 'Arrival', description: 'Velvet rose, red fruit, creamy amber, and sandalwood for a graceful signature.' },
+  { id: 5, slug: 'jasmine-bliss', name: 'Jasmine Bliss Premium', category: 'Floral', price: 999, oldPrice: 1299, rating: 4, image: productImg1, tone: '#bb7736', badge: 'Loved', description: 'Soft jasmine, white musk, and creamy woods with a delicate long lasting trail.' },
+  { id: 6, slug: 'luxe-oud', name: 'Luxe Oud Premium', category: 'Luxury', price: 1599, oldPrice: 2999, rating: 5, image: productImg2, tone: '#1d375c', badge: 'Luxury', description: 'Deep resin, rare woods, glowing amber, and a rich gift-ready character.' }
 ];
 
 export const reels = [
