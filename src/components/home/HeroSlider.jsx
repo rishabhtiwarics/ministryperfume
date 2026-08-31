@@ -12,5 +12,5 @@ export default function HeroSlider() {
     const timer = setInterval(() => setActive((value) => (value + 1) % slides.length), 4200);
     return () => clearInterval(timer);
   }, []);
-  return <section className="hero-slider">{slides.map((slide, index) => <img key={slide} src={slide} alt="Avenlora perfume" className={index === active ? 'active' : ''} />)}<div className="hero-dots">{slides.map((_, index) => <button key={index} className={index === active ? 'active' : ''} onClick={() => setActive(index)} aria-label={`Go to slide ${index + 1}`} />)}</div></section>;
+  return <section className="hero-slider">{slides.map((slide, index) => <img key={slide} src={slide} alt="Ministry Perfume" className={index === active ? 'active' : ''} />)}<div className="hero-dots">{slides.map((_, index) => <button key={index} className={index === active ? 'active' : ''} onClick={() => setActive(index)} aria-label={`Go to slide ${index + 1}`} />)}</div></section>;
 }

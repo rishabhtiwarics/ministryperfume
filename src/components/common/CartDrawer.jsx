@@ -13,7 +13,7 @@ export default function CartDrawer() {
         <button className="icon-btn sidebar-close" aria-label="Close cart" onClick={() => setIsCartOpen(false)}><X size={22} /></button>
       </div>
       <div className="cart-drawer-main">
-        {items.length ? <div className="cart-list">{items.map((item) => <ProductCard key={item.id} product={item} variant="cart" />)}</div> : <div className="empty-cart"><ShoppingBag size={36} /><h3>Your cart is empty</h3><p>Add Avenlora fragrances to see them here.</p><Link className="primary-btn" to="/shop" onClick={() => setIsCartOpen(false)}>Shop Now</Link></div>}
+        {items.length ? <div className="cart-list">{items.map((item) => <ProductCard key={item.id} product={item} variant="cart" />)}</div> : <div className="empty-cart"><ShoppingBag size={36} /><h3>Your cart is empty</h3><p>Add Ministry Perfume fragrances to see them here.</p><Link className="primary-btn" to="/shop" onClick={() => setIsCartOpen(false)}>Shop Now</Link></div>}
       </div>
       {items.length > 0 && (
         <div className="cart-drawer-footer">

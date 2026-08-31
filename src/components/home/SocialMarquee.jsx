@@ -20,7 +20,7 @@ export default function SocialMarquee() {
       <div className="image-marquee">
         <div>
           {row.map((image, index) => (
-            <a className="social-marquee-card" href="https://www.instagram.com/" aria-label="Open Avenlora Instagram" key={index}>
+            <a className="social-marquee-card" href="https://www.instagram.com/" aria-label="Open Ministry Perfume Instagram" key={index}>
               <img src={image} alt="Instagram perfume post" />
               <span className="social-overlay"><Instagram size={26} /></span>
             </a>
