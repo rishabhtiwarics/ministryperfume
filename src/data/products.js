@@ -4,6 +4,9 @@ import blackLogo from '../img/ministry_black_logo.png';
 import whiteLogo from '../img/ministry_white_logo.png';
 import middleBanner1 from '../img/middlebennr1.png';
 import middleBanner2 from '../img/middlebennr2.png';
+import mobileMiddleBanner1 from '../img/mobilemiddlebenner1.jpeg';
+import mobileMiddleBanner2 from '../img/mobilemiddlebennr2.jpg';
+import sidebarBannerImg from '../img/sidebarbannerimg.jpeg';
 import productImg1 from '../img/productimg1.jpeg';
 import productImg2 from '../img/productimg2.jpeg';
 import productImg3 from '../img/productimg3.jpeg';
@@ -25,7 +28,10 @@ export const brandAssets = {
   bottleLine,
   amberSet,
   middleBanner1,
-  middleBanner2
+  middleBanner2,
+  mobileMiddleBanner1,
+  mobileMiddleBanner2,
+  sidebarBannerImg
 };
 
 export const categories = [

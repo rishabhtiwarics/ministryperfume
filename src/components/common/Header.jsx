@@ -49,7 +49,7 @@ export default function Header() {
         </div>
         <div className="sidebar-main">
           <nav className="mobile-nav-list">{mobileLinks.map(({ label, path }) => <NavLink key={path} to={path} onClick={() => setMenuOpen(false)}>{label}</NavLink>)}</nav>
-          <Link className="sidebar-mini-banner" to="/shop" onClick={() => setMenuOpen(false)}><img src={brandAssets.bottleLine} alt="Ministry Perfume" /></Link>
+          <Link className="sidebar-mini-banner" to="/shop" onClick={() => setMenuOpen(false)}><img src={brandAssets.sidebarBannerImg} alt="Ministry Perfume" /></Link>
           <div className="mobile-user-wrap"><UserPanel compact /></div>
         </div>
         <div className="sidebar-footer"><span>Follow Ministry Perfume</span><div className="sidebar-socials"><a href="#" aria-label="Facebook"><Facebook size={18} /></a><a href="#" aria-label="Instagram"><Instagram size={18} /></a></div></div>
