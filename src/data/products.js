@@ -2,7 +2,7 @@ import bottleLine from '../img/WhatsApp Image 2026-08-25 at 11.05.44 AM.jpeg';
 import amberSet from '../img/WhatsApp Image 2026-08-25 at 11.05.59 AM.jpeg';
 import blackLogo from '../img/ministry_black_logo.png';
 import whiteLogo from '../img/ministry_white_logo.png';
-import middleBanner1 from '../img/middlebennr1.png';
+import middleBanner1 from '../img/middlebennr1.jpeg';
 import middleBanner2 from '../img/middlebennr2.png';
 import mobileMiddleBanner1 from '../img/mobilemiddlebenner1.jpeg';
 import mobileMiddleBanner2 from '../img/mobilemiddlebennr2.jpg';
