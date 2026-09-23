@@ -168,7 +168,7 @@ del { color:#777; }
   .image-banner .mobile-banner-img { display:block !important; aspect-ratio:auto !important; }
 }
 .image-banner.middle-banner { width:100%; overflow:hidden; background:#fff; }
-.image-banner.middle-banner img { display:block; width:100%; max-width:none; height:auto; aspect-ratio:1824 / 592; object-fit:contain; object-position:center; background:#fff; }
+.image-banner.middle-banner img:not(.mobile-banner-img) { display:block; width:100%; max-width:none; height:auto; aspect-ratio:1824 / 592; object-fit:contain; object-position:center; background:#fff; }
 .image-banner.middle-banner img.mobile-banner-img { aspect-ratio:auto !important; }
 .testimonials { background:var(--soft); }
 .testimonials-carousel { display:grid; grid-template-columns:.82fr 1fr .82fr; gap:18px; align-items:center; }
