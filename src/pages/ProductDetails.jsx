@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Banknote, ChevronLeft, ChevronRight, MapPinned, Minus, Plus, ShieldCheck, ShoppingBag, Star, Truck } from 'lucide-react';
+import { Banknote, ChevronDown, ChevronLeft, ChevronRight, MapPinned, Minus, Plus, ShieldCheck, ShoppingBag, Star, Truck } from 'lucide-react';
 import { products } from '../data/products.js';
 import { useCart } from '../context/CartContext.jsx';
 import ProductSection from '../components/home/ProductSection.jsx';
+import miniGiftImg from '../../../../.gemini/antigravity-ide/brain/5adfa9e1-9947-49b7-a060-c0e8cf8f8de0/gift_mini_parfum_1790316889765.png';
+import howToApplyImg from '../../../../.gemini/antigravity-ide/brain/5adfa9e1-9947-49b7-a060-c0e8cf8f8de0/how_to_apply_perfume_1790318522236.png';
 
 const THUMBNAIL_LIMIT = 5;
 
@@ -15,17 +17,16 @@ export default function ProductDetails() {
   const detailsRef = useRef(null);
   const images = product.images?.length ? product.images : [product.image];
   const [activeImage, setActiveImage] = useState(0);
-  const [thumbnailStart, setThumbnailStart] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [showSticky, setShowSticky] = useState(false);
+  const [openAccordion, setOpenAccordion] = useState('description');
+  const [openFaq, setOpenFaq] = useState(null);
   const selectedImage = images[activeImage] || images[0];
   const relatedProducts = products.filter((item) => item.id !== product.id);
-  const visibleThumbnails = images.slice(thumbnailStart, thumbnailStart + THUMBNAIL_LIMIT);
   const tags = product.tags || [product.category, product.badge].filter(Boolean);
 
   useEffect(() => {
     setActiveImage(0);
-    setThumbnailStart(0);
     setQuantity(1);
     const onScroll = () => setShowSticky(Boolean(detailsRef.current && detailsRef.current.getBoundingClientRect().bottom < 0));
     onScroll();
@@ -33,11 +34,7 @@ export default function ProductDetails() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [product.id]);
 
-  const selectImage = (index) => {
-    setActiveImage(index);
-    if (index < thumbnailStart) setThumbnailStart(index);
-    if (index >= thumbnailStart + THUMBNAIL_LIMIT) setThumbnailStart(index - THUMBNAIL_LIMIT + 1);
-  };
+  const selectImage = (index) => setActiveImage(index);
   const moveMainImage = (direction) => selectImage(activeImage + direction);
   const addQuantityToCart = () => {
     Array.from({ length: quantity }).forEach(() => cart.addToCart(product));
@@ -57,23 +54,25 @@ export default function ProductDetails() {
           <div className="product-gallery">
             <img className="product-gallery-main" src={selectedImage} alt={product.name} />
             {images.length > 1 && (
-              <>
-                {activeImage > 0 && <button className="product-gallery-nav previous" type="button" onClick={() => moveMainImage(-1)} aria-label="Previous product image"><ChevronLeft size={23} /></button>}
-                {activeImage < images.length - 1 && <button className="product-gallery-nav next" type="button" onClick={() => moveMainImage(1)} aria-label="Next product image"><ChevronRight size={23} /></button>}
-                <div className="product-gallery-thumbs">
-                  <div className="thumbnail-list">
-                    {visibleThumbnails.map((image, offset) => {
-                      const index = thumbnailStart + offset;
-                      return <button type="button" className={activeImage === index ? 'active' : ''} onClick={() => selectImage(index)} key={`${image}-${index}`} aria-label={`View ${product.name} image ${index + 1}`}><img src={image} alt="" /></button>;
-                    })}
+              <div className={`product-gallery-grid images-count-${Math.min(images.length, 5)}`}>
+                {images.slice(0, 5).map((image, index) => (
+                  <div key={`${image}-${index}`} className={`gallery-grid-item item-${index + 1} ${activeImage === index ? 'active' : ''}`} onClick={() => selectImage(index)}>
+                    <img src={image} alt={`${product.name} view ${index + 1}`} />
                   </div>
-                </div>
-              </>
+                ))}
+              </div>
             )}
           </div>
           <div className="product-detail-info">
             {product.badge && <span className="eyebrow">{product.badge}</span>}
             <h1>{product.name}</h1>
+            
+            <div className="product-spec-tags">
+              <span className="spec-tag">UNISEX</span>
+              <span className="spec-tag">LEATHER</span>
+              <span className="spec-tag">PARFUM</span>
+            </div>
+
             <div className="product-detail-meta">
               <span className="detail-rating">
                 {Array.from({ length: 5 }).map((_, index) => <Star key={index} size={15} fill={index < Math.round(product.rating) ? 'currentColor' : 'none'} />)}
@@ -85,12 +84,56 @@ export default function ProductDetails() {
               <strong>₹{product.price.toLocaleString('en-IN')}</strong>
               {product.oldPrice && <del>₹{product.oldPrice.toLocaleString('en-IN')}</del>}
             </div>
+
+            <p className="shipping-notice">* Ships within 24-36 hours of ordering.</p>
+
             <p>{product.description}</p>
             {tags.length > 0 && (
               <div className="product-tags">
-                {tags.map((tag) => <span key={tag}>{tag}</span>)}
+                {tags.slice(0, 3).map((tag) => <span key={tag}>{tag}</span>)}
               </div>
             )}
+
+            <div className="product-offers-section">
+              <h3 className="offers-title">Offers</h3>
+              <div className="offers-slider-container">
+                <div className="offers-wrapper">
+                  <div className="offer-card">
+                    <div className="offer-card-side-badge">
+                      <span>GIFT · INCLUDED</span>
+                    </div>
+                    <div className="offer-card-content">
+                      <h4>A mini surprise for you</h4>
+                      <p>Get a 7ml Parfum with your order</p>
+                      <div className="offer-applied">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <span>APPLIED AT CHECKOUT</span>
+                      </div>
+                    </div>
+                    <div className="offer-card-img">
+                      <img src={images[1] || product.image} alt="Offer Product Mini" />
+                    </div>
+                  </div>
+
+                  <div className="offer-card">
+                    <div className="offer-card-side-badge">
+                      <span>BUNDLE · SAVE</span>
+                    </div>
+                    <div className="offer-card-content">
+                      <h4>More for you</h4>
+                      <p>Buy 2 or more 100ml Fragrances, save up to 15%</p>
+                      <div className="offer-explore-link">
+                        <span>EXPLORE BUNDLES</span>
+                      </div>
+                    </div>
+                    <div className="offer-card-img">
+                      <img src={images[2] || images[0] || product.image} alt="Offer Product Bundle" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="product-purchase-row">
               <div className="product-quantity">
                 <button type="button" aria-label="Decrease quantity" onClick={() => setQuantity((current) => Math.max(1, current - 1))}><Minus size={17} /></button>
@@ -113,6 +156,86 @@ export default function ProductDetails() {
           </div>
         </div>
       </section>
+
+      {/* Product Details Accordion Section */}
+      <section className="product-info-accordion-section container">
+        <div className="product-accordions-group">
+          {/* 1. Product Description Accordion */}
+          <div className={`main-accordion-item ${openAccordion === 'description' ? 'open' : ''}`}>
+            <button type="button" className="main-accordion-header" onClick={() => setOpenAccordion(openAccordion === 'description' ? null : 'description')}>
+              <h2>Product Description</h2>
+              <ChevronDown size={22} className="main-accordion-icon" />
+            </button>
+            {openAccordion === 'description' && (
+              <div className="main-accordion-body">
+                <p>{product.description} Experience luxury notes carefully distilled to create a memorable impression that lasts all day.</p>
+                <div className="description-images-grid">
+                  <div className="desc-img-item"><img src={images[0]} alt="Fragrance Note 1" /></div>
+                  <div className="desc-img-item"><img src={images[1] || images[0]} alt="Fragrance Note 2" /></div>
+                  <div className="desc-img-item"><img src={images[2] || images[0]} alt="Fragrance Note 3" /></div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 2. How To Apply Accordion */}
+          <div className={`main-accordion-item ${openAccordion === 'howToApply' ? 'open' : ''}`}>
+            <button type="button" className="main-accordion-header" onClick={() => setOpenAccordion(openAccordion === 'howToApply' ? null : 'howToApply')}>
+              <h2>How To Apply</h2>
+              <ChevronDown size={22} className="main-accordion-icon" />
+            </button>
+            {openAccordion === 'howToApply' && (
+              <div className="main-accordion-body">
+                <p>For optimum longevity and trail, spray onto pulse points such as your wrists, neck, and behind the ears from a distance of 6-8 inches.</p>
+                <div className="how-to-apply-banner">
+                  <img src={howToApplyImg} alt="How to apply perfume" />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 3. FAQs Accordion */}
+          <div className={`main-accordion-item ${openAccordion === 'faqs' ? 'open' : ''}`}>
+            <button type="button" className="main-accordion-header" onClick={() => setOpenAccordion(openAccordion === 'faqs' ? null : 'faqs')}>
+              <h2>FAQs</h2>
+              <ChevronDown size={22} className="main-accordion-icon" />
+            </button>
+            {openAccordion === 'faqs' && (
+              <div className="main-accordion-body">
+                <div className="faq-accordion">
+                  {[
+                    { q: 'How long does this fragrance last?', a: 'Our concentrated Eau de Parfum formulation lasts between 8 to 12 hours on pulse points and even longer on garments.' },
+                    { q: 'Is this suitable for sensitive skin?', a: 'Yes, all our perfumes are dermatologically tested and crafted with skin-safe ingredient standards.' },
+                    { q: 'Can I return or exchange if unopened?', a: 'We accept returns and exchanges on unopened luxury packages within 7 days of delivery.' }
+                  ].map((faq, idx) => (
+                    <div key={idx} className={`faq-item ${openFaq === idx ? 'open' : ''}`}>
+                      <button type="button" className="faq-question" onClick={(e) => { e.stopPropagation(); setOpenFaq(openFaq === idx ? null : idx); }}>
+                        <span>{faq.q}</span>
+                        <ChevronDown size={18} className="faq-icon" />
+                      </button>
+                      {openFaq === idx && <div className="faq-answer"><p>{faq.a}</p></div>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 4. Legal Information Accordion */}
+          <div className={`main-accordion-item ${openAccordion === 'legal' ? 'open' : ''}`}>
+            <button type="button" className="main-accordion-header" onClick={() => setOpenAccordion(openAccordion === 'legal' ? null : 'legal')}>
+              <h2>Legal Information</h2>
+              <ChevronDown size={22} className="main-accordion-icon" />
+            </button>
+            {openAccordion === 'legal' && (
+              <div className="main-accordion-body">
+                <p>Manufactured &amp; Marketed by Ministry Perfume Pvt Ltd. All rights reserved. Country of origin: India. Ingredients: Alcohol Denat., Parfum (Fragrance), Aqua (Water), Limonene, Linalool, Citral, Benzyl Alcohol.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       <ProductSection eyebrow="You may also like" title="Related Fragrances" products={relatedProducts} variant="related" />
       <div className={`product-section__sticky-product ${showSticky ? 'show' : ''}`}>
         <div className="container sticky-product-inner">

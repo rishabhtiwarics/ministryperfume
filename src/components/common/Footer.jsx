@@ -12,7 +12,6 @@ const BRANDS = [
 export default function Footer() {
   return (
     <footer className="footer">
-      <div className="footer-watermark">MINISTRY</div>
       <div className="container footer-grid">
         <div className="footer-brand">
           <img src={brandAssets.blackLogo} alt="Ministry Perfume" />
@@ -29,7 +28,8 @@ export default function Footer() {
             ))}
           </div>
           <Link to="/privacy-policy">Privacy Policy</Link>
-          <Link to="/terms-condition">Terms & Condition</Link>
+          <Link to="/terms-condition">Terms &amp; Condition</Link>
+          <Link to="/refund-policy">Refund Policy</Link>
         </div>
         <div className="footer-categories">
           <h4>Categories</h4>
@@ -53,7 +53,10 @@ export default function Footer() {
           <p><Mail size={17} /> hello@ministryperfume.com</p>
         </div>
       </div>
-      <div className="footer-bottom">Copyright © 2026 Ministry Perfume. All rights reserved.</div>
+      <div className="footer-bottom">
+        <span>Copyright © 2026 Ministry Perfume. All rights reserved.</span>
+        <span className="launchveda-credit">Created By <a href="https://www.launchveda.com/" target="_blank" rel="noopener noreferrer">Launchveda</a></span>
+      </div>
     </footer>
   );
 }
