@@ -4,10 +4,10 @@ import { Banknote, ChevronDown, ChevronLeft, ChevronRight, MapPinned, Minus, Pau
 import { products } from '../data/products.js';
 import { useCart } from '../context/CartContext.jsx';
 import ProductSection from '../components/home/ProductSection.jsx';
-import miniGiftImg from '../../../../.gemini/antigravity-ide/brain/5adfa9e1-9947-49b7-a060-c0e8cf8f8de0/gift_mini_parfum_1790316889765.png';
+import miniGiftImg from '../img/gift_mini_parfum.png';
 import howToApplyImg from '../img/productdetails.jpeg';
 import productDetailSingleImg from '../img/productdetail33.jpeg';
-import centerDescNoteImg from '../../../../.gemini/antigravity-ide/brain/5adfa9e1-9947-49b7-a060-c0e8cf8f8de0/amber_perfume_note_center_1790323549699.png';
+import centerDescNoteImg from '../img/amber_perfume_note_center.png';
 
 const THUMBNAIL_LIMIT = 5;
 

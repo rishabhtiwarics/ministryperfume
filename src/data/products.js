@@ -28,6 +28,7 @@ import aboutMiddle from '../img/aboutmiddle.jpeg';
 import innerBannerImg from '../img/innerbnnerimg.jpeg';
 import mobileInnerBannerImg from '../img/mobileinnerbnnerimg.jpeg';
 import whyImg from '../img/whyimg.jpeg';
+import founderImg from '../img/founderimg.jpeg';
 
 export const brandAssets = {
   blackLogo,
@@ -46,7 +47,8 @@ export const brandAssets = {
   aboutMiddle,
   innerBannerImg,
   mobileInnerBannerImg,
-  whyImg
+  whyImg,
+  founderImg
 };
 
 export const categories = [

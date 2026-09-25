@@ -122,7 +122,7 @@ export default function About() {
 
             {/* RIGHT PHOTO & OVERLAY */}
             <div className="about-founder-photo">
-              <img src={brandAssets.bottleLine} alt="Ministry Perfume Founder & Craftsmanship" />
+              <img src={brandAssets.founderImg} alt="Rishabh Tiwari - Ministry Perfume Founder" />
               <div className="about-founder-overlay">
                 <p className="eyebrow">OUR PHILOSOPHY</p>
                 <p>
