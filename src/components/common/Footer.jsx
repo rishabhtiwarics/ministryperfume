@@ -54,8 +54,10 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <span>Copyright © 2026 Ministry Perfume. All rights reserved.</span>
-        <span className="launchveda-credit">Created By <a href="https://www.launchveda.com/" target="_blank" rel="noopener noreferrer">Launchveda</a></span>
+        <div className="container footer-bottom-inner">
+          <span>Copyright © 2026 Ministry Perfume. All rights reserved.</span>
+          <span className="launchveda-credit">Created By <a href="https://www.launchveda.com/" target="_blank" rel="noopener noreferrer">Launchveda</a></span>
+        </div>
       </div>
     </footer>
   );

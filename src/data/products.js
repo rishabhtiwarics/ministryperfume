@@ -21,8 +21,13 @@ import category2 from '../img/categories/categorie2.jpeg';
 import category3 from '../img/categories/categorie3.jpeg';
 import category4 from '../img/categories/categorie4.jpeg';
 
+import videoSectionVideo from '../img/VideoSection-video.mp4';
 import shopPageSideBanner from '../img/shoppagesidebnner.jpeg';
 import shopProductBanner from '../img/shopproductbanerr.jpg';
+import aboutMiddle from '../img/aboutmiddle.jpeg';
+import innerBannerImg from '../img/innerbnnerimg.jpeg';
+import mobileInnerBannerImg from '../img/mobileinnerbnnerimg.jpeg';
+import whyImg from '../img/whyimg.jpeg';
 
 export const brandAssets = {
   blackLogo,
@@ -36,7 +41,12 @@ export const brandAssets = {
   mobileMiddleBanner2,
   sidebarBannerImg,
   shopPageSideBanner,
-  shopProductBanner
+  shopProductBanner,
+  videoSectionVideo,
+  aboutMiddle,
+  innerBannerImg,
+  mobileInnerBannerImg,
+  whyImg
 };
 
 export const categories = [
@@ -47,12 +57,12 @@ export const categories = [
 ];
 
 export const products = [
-  { id: 1, slug: 'golden-oud', name: 'Golden Oud Premium', category: 'Oud', price: 549, oldPrice: 3999, rating: 5, image: productImg1, images: [productImg1, productImg2, productImg3, productImg4, bottleLine], tone: '#ed6c06', badge: 'New Launch', description: 'Warm oud, saffron heat, polished woods, and a deep amber trail made for festive evenings.' },
-  { id: 2, slug: 'shadow-mist', name: 'Shadow Mist', category: 'Men', price: 899, oldPrice: 1299, rating: 4, image: productImg2, images: [productImg2, productImg3, productImg4, amberSet], tone: '#bb7736', badge: 'Best Seller', description: 'Smoky spice, dark vanilla, and refined woods with a clean premium finish.' },
-  { id: 3, slug: 'ocean-veil', name: 'Ocean Veil', category: 'Fresh', price: 799, oldPrice: 1299, rating: 3.5, image: productImg3, images: [productImg3, productImg4, bottleLine], tone: '#1d375c', badge: 'Fresh', description: 'Citrus lift, aquatic freshness, blue woods, and soft musk for daily wear.' },
-  { id: 4, slug: 'velvet-rouge', name: 'Velvet Rouge', category: 'Women', price: 999, oldPrice: 1499, rating: 4.5, image: productImg4, images: [productImg4, productImg1], tone: '#8e1c12', badge: 'Arrival', description: 'Velvet rose, red fruit, creamy amber, and sandalwood for a graceful signature.' },
-  { id: 5, slug: 'jasmine-bliss', name: 'Jasmine Bliss Premium', category: 'Floral', price: 999, oldPrice: 1299, rating: 4, image: productImg1, images: [productImg1, productImg3, productImg2, amberSet, sidebarBannerImg], tone: '#bb7736', badge: 'Loved', description: 'Soft jasmine, white musk, and creamy woods with a delicate long lasting trail.' },
-  { id: 6, slug: 'luxe-oud', name: 'Luxe Oud Premium', category: 'Luxury', price: 1599, oldPrice: 2999, rating: 5, image: productImg2, images: [productImg2], tone: '#1d375c', badge: 'Luxury', description: 'Deep resin, rare woods, glowing amber, and a rich gift-ready character.' }
+  { id: 1, slug: 'golden-oud', name: 'Golden Oud Premium', category: 'Oud', price: 549, oldPrice: 3999, rating: 5, image: productImg1, images: [productImg1, videoSectionVideo, productImg3, productImg4, bottleLine], tone: '#ed6c06', badge: 'New Launch', description: 'Warm oud, saffron heat, polished woods, and a deep amber trail made for festive evenings.' },
+  { id: 2, slug: 'shadow-mist', name: 'Shadow Mist', category: 'Men', price: 899, oldPrice: 1299, rating: 4, image: productImg2, images: [productImg2, videoSectionVideo, productImg4, amberSet], tone: '#bb7736', badge: 'Best Seller', description: 'Smoky spice, dark vanilla, and refined woods with a clean premium finish.' },
+  { id: 3, slug: 'ocean-veil', name: 'Ocean Veil', category: 'Fresh', price: 799, oldPrice: 1299, rating: 3.5, image: productImg3, images: [productImg3, videoSectionVideo, bottleLine], tone: '#1d375c', badge: 'Fresh', description: 'Citrus lift, aquatic freshness, blue woods, and soft musk for daily wear.' },
+  { id: 4, slug: 'velvet-rouge', name: 'Velvet Rouge', category: 'Women', price: 999, oldPrice: 1499, rating: 4.5, image: productImg4, images: [productImg4, videoSectionVideo], tone: '#8e1c12', badge: 'Arrival', description: 'Velvet rose, red fruit, creamy amber, and sandalwood for a graceful signature.' },
+  { id: 5, slug: 'jasmine-bliss', name: 'Jasmine Bliss Premium', category: 'Floral', price: 999, oldPrice: 1299, rating: 4, image: productImg1, images: [productImg1, videoSectionVideo, productImg2, amberSet, sidebarBannerImg], tone: '#bb7736', badge: 'Loved', description: 'Soft jasmine, white musk, and creamy woods with a delicate long lasting trail.' },
+  { id: 6, slug: 'luxe-oud', name: 'Luxe Oud Premium', category: 'Luxury', price: 1599, oldPrice: 2999, rating: 5, image: productImg2, images: [productImg2, videoSectionVideo], tone: '#1d375c', badge: 'Luxury', description: 'Deep resin, rare woods, glowing amber, and a rich gift-ready character.' }
 ];
 
 export const reels = [

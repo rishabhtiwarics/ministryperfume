@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Banknote, ChevronDown, ChevronLeft, ChevronRight, MapPinned, Minus, Plus, ShieldCheck, ShoppingBag, Star, Truck } from 'lucide-react';
+import { Banknote, ChevronDown, ChevronLeft, ChevronRight, MapPinned, Minus, Pause, Play, Plus, ShieldCheck, ShoppingBag, Star, Truck, Volume2, VolumeX } from 'lucide-react';
 import { products } from '../data/products.js';
 import { useCart } from '../context/CartContext.jsx';
 import ProductSection from '../components/home/ProductSection.jsx';
 import miniGiftImg from '../../../../.gemini/antigravity-ide/brain/5adfa9e1-9947-49b7-a060-c0e8cf8f8de0/gift_mini_parfum_1790316889765.png';
 import howToApplyImg from '../../../../.gemini/antigravity-ide/brain/5adfa9e1-9947-49b7-a060-c0e8cf8f8de0/how_to_apply_perfume_1790318522236.png';
+import centerDescNoteImg from '../../../../.gemini/antigravity-ide/brain/5adfa9e1-9947-49b7-a060-c0e8cf8f8de0/amber_perfume_note_center_1790323549699.png';
 
 const THUMBNAIL_LIMIT = 5;
 
@@ -52,12 +53,21 @@ export default function ProductDetails() {
         </nav>
         <div className="product-detail">
           <div className="product-gallery">
-            <img className="product-gallery-main" src={selectedImage} alt={product.name} />
+            {typeof selectedImage === 'string' && selectedImage.endsWith('.mp4') ? (
+              <GalleryVideoItem src={selectedImage} isMain />
+            ) : (
+              <img className="product-gallery-main" src={selectedImage} alt={product.name} />
+            )}
+
             {images.length > 1 && (
               <div className={`product-gallery-grid images-count-${Math.min(images.length, 5)}`}>
-                {images.slice(0, 5).map((image, index) => (
-                  <div key={`${image}-${index}`} className={`gallery-grid-item item-${index + 1} ${activeImage === index ? 'active' : ''}`} onClick={() => selectImage(index)}>
-                    <img src={image} alt={`${product.name} view ${index + 1}`} />
+                {images.slice(0, 5).map((media, index) => (
+                  <div key={`${media}-${index}`} className={`gallery-grid-item item-${index + 1} ${activeImage === index ? 'active' : ''}`} onClick={() => selectImage(index)}>
+                    {typeof media === 'string' && media.endsWith('.mp4') ? (
+                      <GalleryVideoItem src={media} isThumb />
+                    ) : (
+                      <img src={media} alt={`${product.name} view ${index + 1}`} />
+                    )}
                   </div>
                 ))}
               </div>
@@ -171,7 +181,7 @@ export default function ProductDetails() {
                 <p>{product.description} Experience luxury notes carefully distilled to create a memorable impression that lasts all day.</p>
                 <div className="description-images-grid">
                   <div className="desc-img-item"><img src={images[0]} alt="Fragrance Note 1" /></div>
-                  <div className="desc-img-item"><img src={images[1] || images[0]} alt="Fragrance Note 2" /></div>
+                  <div className="desc-img-item"><img src={centerDescNoteImg} alt="Fragrance Note Amber Center" /></div>
                   <div className="desc-img-item"><img src={images[2] || images[0]} alt="Fragrance Note 3" /></div>
                 </div>
               </div>
@@ -265,5 +275,53 @@ export default function ProductDetails() {
 
 function ProductBenefit({ icon: Icon, text }) {
   return <div><Icon size={19} /><span>{text}</span></div>;
+}
+
+function GalleryVideoItem({ src, isMain, isThumb }) {
+  const videoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const togglePlay = (e) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      videoRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
+  const toggleMute = (e) => {
+    e.stopPropagation();
+    if (!videoRef.current) return;
+    videoRef.current.muted = !isMuted;
+    setIsMuted(!isMuted);
+  };
+
+  if (isThumb) {
+    return (
+      <div className="video-thumb-wrap">
+        <video src={src} autoPlay loop muted playsInline />
+        <span className="video-thumb-badge"><Play size={12} fill="currentColor" /></span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="product-gallery-video-wrap">
+      <video ref={videoRef} src={src} autoPlay loop muted={isMuted} playsInline />
+      <div className="gallery-video-controls">
+        <button type="button" className="video-control-btn" onClick={togglePlay} aria-label={isPlaying ? 'Pause video' : 'Play video'}>
+          {isPlaying ? <Pause size={16} /> : <Play size={16} fill="currentColor" />}
+        </button>
+        <button type="button" className="video-control-btn" onClick={toggleMute} aria-label={isMuted ? 'Unmute video' : 'Mute video'}>
+          {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+        </button>
+      </div>
+    </div>
+  );
 }
 

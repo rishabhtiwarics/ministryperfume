@@ -1,15 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { brandAssets } from '../../data/products.js';
 
-export default function InnerBanner({ eyebrow, title, paragraph }) {
+export default function InnerBanner({ title }) {
   return (
     <section className="inner-banner">
       <div className="container">
-        <span className="eyebrow">{eyebrow}</span>
+        <div className="breadcrumb">
+          <Link to="/">Home</Link>
+          <span>/</span>
+          <span>{title}</span>
+        </div>
         <h1>{title}</h1>
-        <p>{paragraph}</p>
-        <div className="breadcrumb"><Link to="/">Home</Link><span>/</span><span>{title}</span></div>
       </div>
     </section>
   );
 }
+
