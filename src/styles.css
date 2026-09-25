@@ -4363,3 +4363,241 @@ textarea {
     margin-bottom: 28px;
   }
 }
+
+/* CONTINUOUS ABOUT MARQUEE STRIP */
+.about-marquee-strip {
+  background: #f8f6f3;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  padding: 14px 0;
+  display: flex;
+  align-items: center;
+}
+
+.about-marquee-track {
+  display: flex;
+  gap: 40px;
+  white-space: nowrap;
+  min-width: max-content;
+  animation: aboutMarquee 45s linear infinite;
+  will-change: transform;
+}
+
+.about-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+
+.about-marquee-item .star-icon {
+  color: var(--orange);
+}
+
+@keyframes aboutMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* ---------- ABOUT PAGE: FOUNDER SECTION ---------- */
+.about-founder-section {
+  width: 100%;
+  background: #fff;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+
+.about-founder-repeater {
+  display: block;
+  width: 100%;
+}
+
+.about-founder-slide {
+  display: flex;
+  min-height: 580px;
+  flex-wrap: wrap;
+}
+
+/* LEFT PANEL */
+.about-founder-panel {
+  flex: 0 0 36%;
+  max-width: 36%;
+  background: #fff;
+  padding: 64px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 580px;
+  border-right: 1px solid var(--line);
+}
+
+.about-founder-mark {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 24px;
+  color: var(--orange);
+}
+
+.about-founder-brand h2 {
+  font-family: Cinzel, serif;
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--ink);
+}
+
+.about-founder-brand p {
+  margin: 0;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.about-founder-rule {
+  width: 32px;
+  height: 2px;
+  background: var(--orange);
+  margin: 28px 0;
+}
+
+.about-founder-headline {
+  font-family: Cinzel, serif;
+  font-size: 26px;
+  line-height: 1.35;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ink);
+}
+
+.about-founder-foot {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.about-founder-foot .url {
+  margin: 0 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--orange);
+  letter-spacing: 0.5px;
+}
+
+.about-founder-foot .count {
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* RIGHT PHOTO & OVERLAY */
+.about-founder-photo {
+  flex: 1 1 0;
+  position: relative;
+  min-height: 580px;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.about-founder-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.about-founder-overlay {
+  position: absolute;
+  inset: 0 52% 0 0;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.05);
+  padding: 56px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.about-founder-overlay .eyebrow {
+  margin: 0 0 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--orange);
+  text-transform: uppercase;
+}
+
+.about-founder-overlay p {
+  font-size: 13.5px;
+  line-height: 1.85;
+  color: #2b2b36;
+  margin: 0 0 20px;
+  max-width: 38ch;
+  font-weight: 500;
+}
+
+.about-founder-overlay p:last-child {
+  margin-bottom: 0;
+}
+
+/* RESPONSIVE BREAKPOINTS FOR FOUNDER SECTION */
+@media (max-width: 920px) {
+  .about-founder-slide {
+    flex-direction: column;
+  }
+
+  .about-founder-panel {
+    flex: 1 1 auto;
+    max-width: 100%;
+    min-height: auto;
+    padding: 48px 28px;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .about-founder-headline {
+    font-size: 22px;
+  }
+
+  .about-founder-photo {
+    min-height: 440px;
+  }
+
+  .about-founder-overlay {
+    inset: 0 20% 0 0;
+    padding: 36px 24px;
+  }
+}
+
+@media (max-width: 620px) {
+  .about-founder-panel {
+    padding: 36px 20px;
+  }
+
+  .about-founder-photo {
+    min-height: 480px;
+  }
+
+  .about-founder-overlay {
+    inset: 0 0 0 0;
+    padding: 32px 20px;
+    background: rgba(255, 255, 255, 0.86);
+    border-right: none;
+  }
+
+  .about-founder-overlay p {
+    max-width: 100%;
+    font-size: 13px;
+  }
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Check, MapPin } from 'lucide-react';
+import { Check, MapPin, Star } from 'lucide-react';
 import InnerBanner from '../components/common/InnerBanner.jsx';
 import { brandAssets, products } from '../data/products.js';
 
@@ -10,6 +10,15 @@ export default function About() {
     'Long-Lasting Projection',
     'Certified Perfumers',
     'Unbeatable Pricing'
+  ];
+
+  const marqueeItems = [
+    'HAPPY CUSTOMERS',
+    '12 YEARS OF EXPERIENCE',
+    'PREMIUM CRAFTSMANSHIP',
+    '100% AUTHENTIC FRAGRANCES',
+    'LONG LASTING PROJECTION',
+    'LUXURY BOTTLE DESIGN'
   ];
 
   return (
@@ -72,11 +81,67 @@ export default function About() {
           </div>
         </div>
       </section>
+      {/* CONTINUOUS MARQUEE STRIP */}
+      <div className="about-marquee-strip">
+        <div className="about-marquee-track">
+          {[...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, index) => (
+            <span key={index} className="about-marquee-item">
+              <Star size={12} className="star-icon" fill="var(--orange)" />
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* FOUNDER SECTION */}
+      <section className="about-founder-section">
+        <div className="about-founder-repeater">
+          <div className="about-founder-slide">
+            {/* LEFT PANEL */}
+            <div className="about-founder-panel">
+              <svg className="about-founder-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <text x="0" y="38" fontFamily="Cinzel, serif" fontSize="46" fill="currentColor">M</text>
+              </svg>
+
+              <div className="about-founder-brand">
+                <h2>Rishabh Tiwari</h2>
+                <p>Founder & Master Perfumer, Ministry Perfume</p>
+              </div>
+
+              <div className="about-founder-rule"></div>
+
+              <h3 className="about-founder-headline">
+                Crafting timeless scents&hellip;<br />Our Creative Visionary.
+              </h3>
+
+              <div className="about-founder-foot">
+                <p className="url">www.ministryperfume.com</p>
+                <p className="count">Atelier Note / 01</p>
+              </div>
+            </div>
+
+            {/* RIGHT PHOTO & OVERLAY */}
+            <div className="about-founder-photo">
+              <img src={brandAssets.bottleLine} alt="Ministry Perfume Founder & Craftsmanship" />
+              <div className="about-founder-overlay">
+                <p className="eyebrow">OUR PHILOSOPHY</p>
+                <p>
+                  Every bottle of Ministry Perfume is born out of a relentless passion for scent artistry. We hand-select rare botanical essences and precious resins from historic distillers to create fragrances that leave an indelible impression.
+                </p>
+                <p>
+                  Our goal is simple: craft olfactory masterpieces that evoke deep emotion and personal identity. From initial formulation to hand bottling, every detail represents elegance and uncompromising quality.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* FULL WIDTH MIDDLE BANNER */}
       <section className="about-middle-banner-section">
         <img src={brandAssets.aboutMiddle} alt="Ministry Perfume Craft Banner" />
       </section>
+
 
       {/* WHY CHOOSE US SECTION */}
       <section className="about-why-choose-section">
