@@ -5,7 +5,8 @@ import { products } from '../data/products.js';
 import { useCart } from '../context/CartContext.jsx';
 import ProductSection from '../components/home/ProductSection.jsx';
 import miniGiftImg from '../../../../.gemini/antigravity-ide/brain/5adfa9e1-9947-49b7-a060-c0e8cf8f8de0/gift_mini_parfum_1790316889765.png';
-import howToApplyImg from '../../../../.gemini/antigravity-ide/brain/5adfa9e1-9947-49b7-a060-c0e8cf8f8de0/how_to_apply_perfume_1790318522236.png';
+import howToApplyImg from '../img/productdetails.jpeg';
+import productDetailSingleImg from '../img/product detail33.jpeg';
 import centerDescNoteImg from '../../../../.gemini/antigravity-ide/brain/5adfa9e1-9947-49b7-a060-c0e8cf8f8de0/amber_perfume_note_center_1790323549699.png';
 
 const THUMBNAIL_LIMIT = 5;
@@ -179,10 +180,10 @@ export default function ProductDetails() {
             {openAccordion === 'description' && (
               <div className="main-accordion-body">
                 <p>{product.description} Experience luxury notes carefully distilled to create a memorable impression that lasts all day.</p>
-                <div className="description-images-grid">
-                  <div className="desc-img-item"><img src={images[0]} alt="Fragrance Note 1" /></div>
-                  <div className="desc-img-item"><img src={centerDescNoteImg} alt="Fragrance Note Amber Center" /></div>
-                  <div className="desc-img-item"><img src={images[2] || images[0]} alt="Fragrance Note 3" /></div>
+                <div className="description-images-grid single-image-grid">
+                  <div className="desc-img-item single-desc-img">
+                    <img src={productDetailSingleImg} alt="Product Detail Spec" />
+                  </div>
                 </div>
               </div>
             )}

@@ -3556,12 +3556,16 @@ textarea {
   margin-bottom: 0;
 }
 
-/* Product Description 3 Images Grid in a Single Row */
+/* Product Description Single Image */
 .description-images-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-top: 24px;
+}
+
+.description-images-grid.single-image-grid {
+  grid-template-columns: 1fr;
 }
 
 .desc-img-item {
@@ -3572,11 +3576,23 @@ textarea {
   background: #fff;
 }
 
+.desc-img-item.single-desc-img {
+  aspect-ratio: auto;
+  border: none;
+  background: transparent;
+}
+
 .desc-img-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.4s ease;
+}
+
+.desc-img-item.single-desc-img img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .desc-img-item:hover img {
@@ -3586,16 +3602,14 @@ textarea {
 /* How to Apply Full Width Banner */
 .how-to-apply-banner {
   width: 100%;
-  max-height: 480px;
-  overflow: hidden;
-  border: 1px solid #EAE5DF;
   margin-top: 20px;
+  overflow: hidden;
+  border-radius: 4px;
 }
 
 .how-to-apply-banner img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
   display: block;
 }
 
@@ -3806,10 +3820,6 @@ textarea {
   .description-images-grid {
     grid-template-columns: 1fr;
     gap: 12px;
-  }
-
-  .how-to-apply-banner {
-    max-height: 280px;
   }
 
   .sticky-product-copy strong {
