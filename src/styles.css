@@ -4721,11 +4721,12 @@ textarea {
   transition: color 0.2s ease;
 }
 
-.input-icon-wrapper input {
-  width: 100%;
-  padding: 12px 14px 12px 42px;
+.input-icon-wrapper input,
+.input-icon-wrapper select,
+.input-icon-wrapper textarea {
+  width: 100% !important;
+  padding: 12px 14px 12px 44px !important;
   border: 1px solid var(--line);
-  border-radius: 10px;
   background: #faf9f8;
   font-size: 14px;
   color: var(--ink);
@@ -4733,7 +4734,9 @@ textarea {
   transition: all 0.25s ease;
 }
 
-.input-icon-wrapper input:focus {
+.input-icon-wrapper input:focus,
+.input-icon-wrapper select:focus,
+.input-icon-wrapper textarea:focus {
   background: #ffffff;
   border-color: var(--blue);
   box-shadow: 0 0 0 3px rgba(29, 55, 92, 0.1);
