@@ -1,5 +1,5 @@
 import React from 'react';
-import { Check, ShoppingBag, Star, Trash2 } from 'lucide-react';
+import { Check, ShoppingBag, Star, Trash2, Minus, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext.jsx';
 
@@ -11,7 +11,55 @@ export default function ProductCard({ product, variant = 'grid' }) {
 
   if (variant === 'mini') return <Link className="product-mini" to={`/shop/${product.slug}`}><img src={product.image} alt={product.name} /><span>{product.name}</span><Rating rating={product.rating} compact /><strong>{price}</strong></Link>;
   if (variant === 'search') return <Link className="product-search" to={`/shop/${product.slug}`}><img src={product.image} alt={product.name} /><span>{product.name}<small>{price}</small></span></Link>;
-  if (variant === 'cart') return <div className="cart-product"><img src={product.image} alt={product.name} /><div className="cart-product-info"><strong>{product.name}</strong><span>{price} x {product.quantity}</span></div><button className="cart-remove" aria-label="Remove item" onClick={() => cart.removeFromCart(product.id)}><Trash2 size={16} /></button></div>;
+
+  if (variant === 'drawer-cart') {
+    return (
+      <div className="cart-product drawer-cart-product">
+        <img src={product.image} alt={product.name} />
+        <div className="cart-product-info">
+          <strong>{product.name}</strong>
+          <span>{price} x {product.quantity}</span>
+        </div>
+        <button className="cart-remove" aria-label="Remove item" onClick={() => cart.removeFromCart(product.id)}>
+          <Trash2 size={16} />
+        </button>
+      </div>
+    );
+  }
+  
+  if (variant === 'cart') {
+    const itemTotal = `₹${(product.price * product.quantity).toLocaleString('en-IN')}`;
+    return (
+      <div className="cart-product">
+        <img src={product.image} alt={product.name} />
+        <div className="cart-product-info">
+          <strong>{product.name}</strong>
+          <span className="unit-price">{price} each</span>
+        </div>
+        <div className="cart-quantity-controls">
+          <button
+            className="qty-btn"
+            aria-label="Decrease quantity"
+            onClick={() => cart.updateQuantity(product.id, product.quantity - 1)}
+          >
+            <Minus size={14} />
+          </button>
+          <span className="qty-number">{product.quantity}</span>
+          <button
+            className="qty-btn"
+            aria-label="Increase quantity"
+            onClick={() => cart.updateQuantity(product.id, product.quantity + 1)}
+          >
+            <Plus size={14} />
+          </button>
+        </div>
+        <div className="cart-item-total">{itemTotal}</div>
+        <button className="cart-remove" aria-label="Remove item" onClick={() => cart.removeFromCart(product.id)}>
+          <Trash2 size={16} />
+        </button>
+      </div>
+    );
+  }
 
   return (
     <article className={`product-card ${variant}`} style={{ '--tone': product.tone }}>
