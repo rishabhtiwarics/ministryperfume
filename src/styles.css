@@ -1495,7 +1495,6 @@ del {
 
 .product-detail,
 .checkout,
-.contact-grid,
 .cart-page {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1538,7 +1537,6 @@ del {
 }
 
 .checkout form,
-.contact-grid form,
 .auth-card form {
   display: grid;
   gap: 14px;
@@ -1549,12 +1547,6 @@ textarea {
   resize: vertical;
 }
 
-.contact-grid p {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--ink);
-}
 
 .footer {
   position: relative;
@@ -1897,7 +1889,6 @@ textarea {
 
   .product-detail,
   .checkout,
-  .contact-grid,
   .cart-page {
     grid-template-columns: 1fr;
   }
@@ -4599,5 +4590,332 @@ textarea {
   .about-founder-overlay p {
     max-width: 100%;
     font-size: 13px;
+  }
+}
+
+/* ==========================================================================
+   Figma Style Contact Section
+   ========================================================================== */
+.contact-card-section {
+  background-color: #f8f6f3;
+  padding: 56px 0;
+}
+
+.contact-card {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  box-shadow: var(--shadow);
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Left Side: Image */
+.contact-card-left {
+  position: relative;
+  width: 100%;
+  min-height: 480px;
+  overflow: hidden;
+  background: #f8f6f3;
+}
+
+.contact-card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.contact-card-left:hover .contact-card-img {
+  transform: scale(1.03);
+}
+
+/* Right Side: Form */
+.contact-card-right {
+  padding: 32px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact-form-header h2 {
+  font-family: Cinzel, serif;
+  font-size: clamp(22px, 2.4vw, 28px);
+  color: var(--blue);
+  margin: 0 0 6px;
+}
+
+.contact-form-header p {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0 0 22px;
+  line-height: 1.48;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.contact-input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact-input-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.input-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon-wrapper .input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--muted);
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.input-icon-wrapper input {
+  width: 100%;
+  padding: 12px 14px 12px 42px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #faf9f8;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.input-icon-wrapper input:focus {
+  background: #ffffff;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(29, 55, 92, 0.1);
+}
+
+.input-icon-wrapper input:focus + .input-icon,
+.input-icon-wrapper:focus-within .input-icon {
+  color: var(--blue);
+}
+
+.textarea-wrapper {
+  align-items: flex-start;
+}
+
+.textarea-wrapper .textarea-icon {
+  top: 14px;
+}
+
+.textarea-wrapper textarea {
+  width: 100%;
+  padding: 12px 14px 12px 42px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #faf9f8;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  min-height: 110px;
+  resize: vertical;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.textarea-wrapper textarea:focus {
+  background: #ffffff;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(29, 55, 92, 0.1);
+}
+
+.contact-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--blue);
+  color: #ffffff;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 6px;
+  box-shadow: 0 6px 18px rgba(29, 55, 92, 0.2);
+}
+
+.contact-submit-btn:hover {
+  background: var(--orange);
+  box-shadow: 0 8px 24px rgba(237, 108, 6, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Breakpoints & Responsive Enhancements */
+@media (max-width: 992px) {
+  .contact-card {
+    grid-template-columns: 1fr;
+    padding: 18px;
+    gap: 18px;
+  }
+
+  .contact-card-left {
+    min-height: 360px;
+  }
+
+  .contact-card-right {
+    padding: 12px 8px;
+  }
+}
+
+@media (max-width: 620px) {
+  .contact-card-section {
+    padding: 32px 0;
+  }
+
+  .contact-card {
+    border-radius: 0;
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .contact-card-left {
+    min-height: 280px;
+  }
+
+  .contact-card-right {
+    padding: 8px 4px;
+  }
+
+  .contact-submit-btn {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   Second Contact Card: 40% Details / 60% Map
+   ========================================================================== */
+.contact-map-card {
+  margin-top: 32px;
+  grid-template-columns: 0.4fr 0.6fr;
+}
+
+.contact-details-side {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact-details-header h2 {
+  font-family: Cinzel, serif;
+  font-size: clamp(22px, 2.4vw, 28px);
+  color: var(--blue);
+  margin: 0 0 6px;
+}
+
+.contact-details-header p {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 0 0 22px;
+  line-height: 1.48;
+}
+
+.contact-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.contact-details-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.contact-detail-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(237, 108, 6, 0.08);
+  border: 1px solid rgba(237, 108, 6, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--orange);
+  flex-shrink: 0;
+}
+
+.contact-detail-text strong {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--blue);
+}
+
+.contact-detail-text p {
+  margin: 2px 0 0;
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.contact-map-side {
+  position: relative;
+  width: 100%;
+  min-height: 440px;
+  overflow: hidden;
+  background: #f8f6f3;
+  border: 1px solid var(--line);
+}
+
+.contact-map-side iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Map Card Breakpoints */
+@media (max-width: 992px) {
+  .contact-map-card {
+    grid-template-columns: 1fr;
+    margin-top: 24px;
+  }
+
+  .contact-details-side {
+    padding: 16px 8px;
+  }
+
+  .contact-map-side {
+    min-height: 350px;
+  }
+}
+
+@media (max-width: 620px) {
+  .contact-details-side {
+    padding: 8px 4px;
+  }
+
+  .contact-map-side {
+    min-height: 280px;
   }
 }
