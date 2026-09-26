@@ -36,7 +36,12 @@ export default function Header() {
           ))}
         </nav>
         <div className="header-actions">
-          <button className="icon-btn search-action" aria-label="Search" onClick={() => setSearchOpen(true)}><Search size={21} /></button>
+          <div className="search-mega-item">
+            <button className="icon-btn search-action" aria-label="Search" onClick={() => setSearchOpen(true)}>
+              <Search size={21} />
+            </button>
+            <SearchMegaDropdown />
+          </div>
           <UserMenu />
           <button className="icon-btn cart-trigger" aria-label="Cart" onClick={() => setIsCartOpen(true)}><ShoppingBag size={21} />{count > 0 && <span>{count}</span>}</button>
           <button className="icon-btn mobile-only" aria-label="Open menu" onClick={() => setMenuOpen(true)}><Menu size={22} /></button>
@@ -61,6 +66,75 @@ export default function Header() {
         <div className="search-results">{products.slice(0, 3).map((product) => <ProductCard key={product.id} product={product} variant="search" />)}</div>
       </div>
     </header>
+  );
+}
+
+function SearchMegaDropdown() {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredProducts = searchTerm.trim() === ''
+    ? []
+    : products.filter((item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+  return (
+    <div className="search-mega-dropdown" onMouseLeave={() => setSearchTerm('')}>
+      <div className="search-mega-header">
+        <span className="eyebrow">Search Fragrances</span>
+        <h3>Find Your Signature Scent</h3>
+        <div className="search-mega-box">
+          <Search size={18} className="search-icon" />
+          <input
+            type="text"
+            placeholder="Type fragrance name, oud, fresh, floral..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <button
+              type="button"
+              className="clear-search-btn"
+              onClick={() => setSearchTerm('')}
+              aria-label="Clear search text"
+              title="Clear text"
+            >
+              <X size={14} />
+            </button>
+          )}
+        </div>
+      </div>
+
+      <div className="search-mega-body">
+        {searchTerm.trim() === '' ? (
+          <div className="search-empty-prompt">
+            <Search size={28} />
+            <p>Start typing above to search our luxury fragrance collection...</p>
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="search-empty-prompt">
+            <p>No fragrances found matching "<strong>{searchTerm}</strong>".</p>
+          </div>
+        ) : (
+          <div className="search-single-row-grid">
+            {filteredProducts.slice(0, 4).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="search-mega-footer">
+        <Link
+          to={searchTerm.trim() ? `/shop?search=${encodeURIComponent(searchTerm.trim())}` : '/shop'}
+          className="primary-btn search-explore-btn"
+        >
+          Explore Now
+        </Link>
+      </div>
+    </div>
   );
 }
 
