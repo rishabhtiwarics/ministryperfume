@@ -3871,11 +3871,49 @@ textarea {
   }
 
   .product-detail-info h1 {
-    font-size: 24px;
+    font-size: 22px;
+  }
+
+  .product-purchase-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .product-quantity {
+    height: 44px;
+  }
+
+  .product-quantity button {
+    width: 34px;
+  }
+
+  .product-quantity strong {
+    width: 34px;
+    font-size: 14px;
+  }
+
+  .product-purchase-row .primary-btn,
+  .product-buy-now {
+    height: 44px;
+    padding: 0 16px;
+    font-size: 13px;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .product-benefits {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .product-benefits div {
+    font-size: 12px;
   }
 
   .offer-card {
-    width: 260px;
+    width: 250px;
   }
 
   .offer-card-content {
@@ -3883,11 +3921,71 @@ textarea {
   }
 
   .offer-card-content h4 {
-    font-size: 13.5px;
+    font-size: 13px;
   }
 
   .offer-card-content p {
+    font-size: 10.5px;
+  }
+}
+
+@media (max-width: 375px) {
+  .product-detail-page {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .shop-inline-breadcrumb {
     font-size: 11px;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  .product-detail-meta {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .price.big {
+    font-size: 24px;
+    gap: 10px;
+  }
+
+  .product-purchase-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .product-quantity {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .product-quantity button {
+    width: 44px;
+  }
+
+  .product-quantity strong {
+    flex: 1;
+  }
+
+  .product-purchase-row .primary-btn,
+  .product-buy-now {
+    width: 100%;
+    height: 46px;
+    padding: 0 14px;
+    font-size: 13.5px;
+  }
+
+  .offer-card {
+    width: 230px;
+  }
+
+  .offer-card-img {
+    width: 70px;
   }
 }
 

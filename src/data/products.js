@@ -14,8 +14,6 @@ import productImg4 from '../img/productimg4.jpeg';
 import reel1 from '../img/reel1.mp4';
 import reel2 from '../img/reel2.mp4';
 import reel3 from '../img/reel3.mp4';
-import reel4 from '../img/reel4.mp4';
-import reel5 from '../img/reel5.mp4';
 import category1 from '../img/categories/categorie1.jpeg';
 import category2 from '../img/categories/categorie2.jpeg';
 import category3 from '../img/categories/categorie3.jpeg';
@@ -71,11 +69,11 @@ export const reels = [
   { productId: 1, video: reel1 },
   { productId: 2, video: reel2 },
   { productId: 3, video: reel3 },
-  { productId: 4, video: reel4 },
-  { productId: 5, video: reel5 },
-  { productId: 6, video: reel1 },
-  { productId: 3, video: reel2 },
-  { productId: 4, video: reel3 }
+  { productId: 4, video: reel1 },
+  { productId: 5, video: reel2 },
+  { productId: 6, video: reel3 },
+  { productId: 1, video: reel1 },
+  { productId: 2, video: reel2 }
 ];
 
 export const testimonials = [
