@@ -5932,3 +5932,155 @@ textarea {
     padding: 20px 16px;
   }
 }
+
+/* ==========================================================================
+   Legal Policy Pages (Privacy Policy, Terms & Conditions, Refund Policy)
+   ========================================================================== */
+.legal-policy-page-section {
+  padding: 60px 0 80px;
+  background: #ffffff;
+}
+
+.legal-policy-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.legal-policy-sidebar {
+  position: sticky;
+  top: 90px;
+}
+
+.legal-quick-card {
+  background: var(--soft);
+  border: 1px solid var(--line);
+  padding: 28px 24px;
+  box-shadow: var(--shadow);
+}
+
+.legal-card-icon {
+  color: var(--orange);
+  margin-bottom: 14px;
+}
+
+.legal-quick-card h3 {
+  font-family: Cinzel, serif;
+  font-size: 20px;
+  color: var(--blue);
+  margin: 0 0 8px 0;
+}
+
+.legal-quick-card p {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 0 0 20px 0;
+}
+
+.legal-highlight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.highlight-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.highlight-item svg {
+  color: var(--orange);
+  flex-shrink: 0;
+}
+
+.legal-policy-content {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.policy-block {
+  position: relative;
+  padding-left: 56px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 32px;
+}
+
+.policy-block:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.policy-number {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: Cinzel, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--orange);
+  opacity: 0.85;
+}
+
+.policy-block h2 {
+  font-family: Cinzel, serif;
+  font-size: clamp(20px, 2.2vw, 24px);
+  color: var(--blue);
+  margin: 0 0 12px 0;
+}
+
+.policy-block p {
+  font-size: 14.5px;
+  color: var(--ink);
+  line-height: 1.7;
+  margin: 0 0 12px 0;
+}
+
+.legal-styled-list {
+  margin: 12px 0 16px 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legal-styled-list li {
+  font-size: 14px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+@media (max-width: 992px) {
+  .legal-policy-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .legal-policy-sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 620px) {
+  .policy-block {
+    padding-left: 0;
+  }
+
+  .policy-number {
+    position: static;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+
+  .legal-quick-card {
+    padding: 22px 18px;
+  }
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { CartProvider } from './context/CartContext.jsx';
 import Layout from './components/common/Layout.jsx';
@@ -18,12 +18,27 @@ import ForgotPassword from './pages/auth/ForgotPassword.jsx';
 import Profile from './pages/Profile.jsx';
 import Dashboard from './pages/admin/Dashboard.jsx';
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }, [pathname]);
+
+  return null;
+}
+
 export default function App() {
   const location = useLocation();
   const isAuthPage = location.pathname.startsWith('/auth');
 
   return (
     <CartProvider>
+      <ScrollToTop />
       <Layout hideChrome={isAuthPage}>
         <Routes>
           <Route path="/" element={<Home />} />
