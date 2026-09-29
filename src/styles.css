@@ -1980,7 +1980,7 @@ textarea {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: url("https://images.unsplash.com/photo-1762586357891-2336a811de2a?fm=jpg&q=70&w=1600&auto=format&fit=crop&ixlib=rb-4.1.0") center/cover;
+  background: url("./img/authbg.jpeg") center/cover;
 }
 
 .mp-card {
@@ -1999,7 +1999,7 @@ textarea {
 .mp-showcase {
   position: relative;
   overflow: hidden;
-  background: url("https://images.unsplash.com/photo-1780042426982-cb794203ea1d?fm=jpg&q=70&w=1200&auto=format&fit=crop&ixlib=rb-4.1.0") center/cover;
+  background: url("./img/authcardimg.jpeg") center/cover;
   min-height: 100%;
   display: flex;
   align-items: flex-start;

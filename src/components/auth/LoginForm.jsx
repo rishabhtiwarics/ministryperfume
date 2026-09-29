@@ -8,7 +8,7 @@ export default function LoginForm() {
     <main className="mp-stage">
       <section className="mp-card">
         <aside className="mp-showcase" aria-label="Selected works">
-          <img className="mp-showcase-logo" src={brandAssets.whiteLogo} alt="Ministry Perfume Logo" />
+          <img className="mp-showcase-logo" src={brandAssets.blackLogo} alt="Ministry Perfume Logo" />
         </aside>
         <div className="mp-form-side">
           <div className="mp-hello">
