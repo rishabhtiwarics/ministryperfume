@@ -1,7 +1,9 @@
 import React from 'react';
+import { useEffect, useState } from 'react';
 import { Facebook, Instagram, Mail, MapPin, Phone, Youtube } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { brandAssets, categories } from '../../data/products.js';
+import { fetchShopifyMenu, getShopifyMenuHref } from '../../lib/shopify.js';
 
 const BRANDS = [
   { name: 'Amazon.in', img: 'https://krishnaayurved.com/cdn/shop/files/ka-amzin-logo.png?v=1775421770&width=110' },
@@ -10,6 +12,36 @@ const BRANDS = [
 
 
 export default function Footer() {
+  const [footerMenu, setFooterMenu] = useState(null);
+  const [menuError, setMenuError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    fetchShopifyMenu('footer')
+      .then((menu) => {
+        if (active) setFooterMenu(menu);
+      })
+      .catch(() => {
+        if (active) setMenuError('Shopify footer menu could not load; showing local links.');
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const footerItems = footerMenu?.items;
+  const categoryItems = footerItems
+    ? footerItems.filter((item) => item.title.toLowerCase() === 'all fragrances' || item.type === 'COLLECTION')
+    : categories;
+  const quickLinks = footerItems
+    ? footerItems.filter((item) => !categoryItems.includes(item))
+    : [
+        { title: 'Privacy Policy', url: '/privacy-policy' },
+        { title: 'Terms & Conditions', url: '/terms-condition' },
+        { title: 'Refund Policy', url: '/refund-policy' }
+      ];
+
   return (
     <footer className="footer">
       <div className="container footer-grid">
@@ -27,22 +59,30 @@ export default function Footer() {
               </a>
             ))}
           </div>
-          <Link to="/privacy-policy">Privacy Policy</Link>
-          <Link to="/terms-condition">Terms &amp; Condition</Link>
-          <Link to="/refund-policy">Refund Policy</Link>
+          <h4>Quick Links</h4>
+          {quickLinks.map((item) => {
+            const href = item.url.startsWith('/') ? item.url : getShopifyMenuHref(item);
+            return href.startsWith('/')
+              ? <Link to={href} key={item.title}>{item.title}</Link>
+              : <a href={href} key={item.title}>{item.title}</a>;
+          })}
         </div>
         <div className="footer-categories">
           <h4>Categories</h4>
           <div className="footer-categories-row">
-            {categories.map((cat) => {
-              const filter = cat.filter || cat.title;
-              const to = filter === 'all' ? '/shop' : `/shop?category=${encodeURIComponent(filter)}`;
-              return (
-                <Link to={to} key={cat.title}>
-                  <img src={cat.image} alt="" />
-                  <span>{cat.title}</span>
-                </Link>
-              );
+            {categoryItems.map((item) => {
+              const title = item.title;
+              const category = categories.find((candidate) => (
+                candidate.title.toLowerCase() === title.toLowerCase()
+                || candidate.filter?.toLowerCase() === title.toLowerCase()
+                || (title.toLowerCase() === 'all fragrances' && candidate.filter === 'all')
+              ));
+              const href = item.url ? getShopifyMenuHref(item) : (item.filter === 'all' ? '/shop' : `/shop?category=${encodeURIComponent(item.filter)}`);
+              const image = category?.image;
+              const content = <>{image && <img src={image} alt="" />}<span>{title}</span></>;
+              return href.startsWith('/')
+                ? <Link to={href} key={title}>{content}</Link>
+                : <a href={href} key={title}>{content}</a>;
             })}
           </div>
         </div>
@@ -53,6 +93,7 @@ export default function Footer() {
           <p><Mail size={17} /> hello@ministryperfume.com</p>
         </div>
       </div>
+      {menuError && <p className="shopify-menu-status" role="status">{menuError}</p>}
       <div className="footer-bottom">
         <div className="container footer-bottom-inner">
           <span>Copyright © 2026 Ministry Perfume. All rights reserved.</span>

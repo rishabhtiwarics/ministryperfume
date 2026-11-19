@@ -1,54 +1,102 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Banknote, ChevronDown, ChevronLeft, ChevronRight, MapPinned, Minus, Pause, Play, Plus, ShieldCheck, ShoppingBag, Star, Truck, Volume2, VolumeX } from 'lucide-react';
-import { products } from '../data/products.js';
-import { useCart } from '../context/CartContext.jsx';
+import { products as localProducts } from '../data/products.js';
+import { formatMoney, useCart } from '../context/CartContext.jsx';
 import ProductSection from '../components/home/ProductSection.jsx';
-import miniGiftImg from '../img/gift_mini_parfum.png';
-import howToApplyImg from '../img/productdetails.jpeg';
-import productDetailSingleImg from '../img/productdetail33.jpeg';
-import centerDescNoteImg from '../img/amber_perfume_note_center.png';
+import { fetchShopifyCatalog, mapShopifyProduct } from '../lib/shopify.js';
+
+const howToApplyImg = '/product-how-to-apply.jpeg';
+const productDetailSingleImg = '/product-detail-single.jpeg';
 
 const THUMBNAIL_LIMIT = 5;
 
 export default function ProductDetails() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const product = products.find((item) => item.slug === slug) || products[0];
+  const localProduct = localProducts.find((item) => item.slug === slug);
+  const [shopifyProduct, setShopifyProduct] = useState(null);
+  const [shopifyRelatedProducts, setShopifyRelatedProducts] = useState(null);
+  const [productError, setProductError] = useState('');
+  const [productLoading, setProductLoading] = useState(true);
+  const product = shopifyProduct || localProduct;
   const cart = useCart();
   const detailsRef = useRef(null);
-  const images = product.images?.length ? product.images : [product.image];
+  const images = product?.images?.length ? product.images : product?.image ? [product.image] : [];
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [showSticky, setShowSticky] = useState(false);
   const [openAccordion, setOpenAccordion] = useState('description');
   const [openFaq, setOpenFaq] = useState(null);
   const selectedImage = images[activeImage] || images[0];
-  const relatedProducts = products.filter((item) => item.id !== product.id);
-  const tags = product.tags || [product.category, product.badge].filter(Boolean);
+  const relatedProducts = shopifyRelatedProducts || localProducts.filter((item) => item.slug !== product?.slug);
+  const tags = product?.tags?.length ? product.tags : [product?.category, product?.badge].filter(Boolean);
 
   useEffect(() => {
+    let active = true;
+    setShopifyProduct(null);
+    setShopifyRelatedProducts(null);
+    setProductError('');
+    setProductLoading(true);
+
+    fetchShopifyCatalog()
+      .then((catalog) => {
+        if (!active) return;
+        const catalogProducts = catalog.products.map(mapShopifyProduct);
+        const result = catalogProducts.find((item) => item.slug === slug);
+        if (result) {
+          setShopifyProduct(result);
+          setShopifyRelatedProducts(catalogProducts.filter((item) => item.slug !== slug));
+        } else {
+          setProductError(`The Shopify product "${slug}" was not found.`);
+        }
+      })
+      .catch((error) => {
+        if (active) setProductError(error.message);
+      })
+      .finally(() => {
+        if (active) setProductLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [slug]);
+
+  useEffect(() => {
+    if (!product) return undefined;
     setActiveImage(0);
     setQuantity(1);
     const onScroll = () => setShowSticky(Boolean(detailsRef.current && detailsRef.current.getBoundingClientRect().bottom < 0));
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [product.id]);
+  }, [product?.id, slug]);
 
   const selectImage = (index) => setActiveImage(index);
   const moveMainImage = (direction) => selectImage(activeImage + direction);
-  const addQuantityToCart = () => {
-    Array.from({ length: quantity }).forEach(() => cart.addToCart(product));
+  const addQuantityToCart = () => cart.addToCart(product, quantity);
+  const buyNow = async () => {
+    if (!product || product.availableForSale === false) return;
+    if (!cart.inCart(product.id) && !(await addQuantityToCart())) return;
+    navigate('/checkout');
   };
-  const buyNow = () => {
-    if (!cart.inCart(product.id)) addQuantityToCart();
-    navigate('/cart');
-  };
+
+  if (!product) {
+    return (
+      <section className="page-section container product-detail-page">
+        <p role={productLoading ? 'status' : 'alert'}>
+          {productLoading ? 'Loading product…' : productError || 'Product not found.'}
+        </p>
+        {!productLoading && <Link className="primary-btn" to="/shop">Back to Shop</Link>}
+      </section>
+    );
+  }
 
   return (
     <>
       <section className="page-section container product-detail-page" ref={detailsRef}>
+        {productError && <p className="shop-empty" role="status">Showing saved product data because Shopify could not be reached: {productError}</p>}
         <nav className="shop-inline-breadcrumb breadcrumb" aria-label="Breadcrumb">
           <Link to="/">Home</Link><span>/</span><Link to="/shop">Shop</Link><span>/</span><strong>{product.name}</strong>
         </nav>
@@ -89,11 +137,11 @@ export default function ProductDetails() {
                 {Array.from({ length: 5 }).map((_, index) => <Star key={index} size={15} fill={index < Math.round(product.rating) ? 'currentColor' : 'none'} />)}
                 <strong>{product.rating.toFixed(1)}</strong>
               </span>
-              <span className="detail-stock"><i />{product.status || 'In Stock'}</span>
+              <span className="detail-stock"><i />{product.availableForSale === false ? 'Out of Stock' : 'In Stock'}</span>
             </div>
             <div className="price big">
-              <strong>₹{product.price.toLocaleString('en-IN')}</strong>
-              {product.oldPrice && <del>₹{product.oldPrice.toLocaleString('en-IN')}</del>}
+              <strong>{formatMoney(product.price, product.currencyCode || 'INR')}</strong>
+              {product.oldPrice > product.price && <del>{formatMoney(product.oldPrice, product.currencyCode || 'INR')}</del>}
             </div>
 
             <p className="shipping-notice">* Ships within 24-36 hours of ordering.</p>
@@ -151,11 +199,11 @@ export default function ProductDetails() {
                 <strong>{quantity}</strong>
                 <button type="button" aria-label="Increase quantity" onClick={() => setQuantity((current) => current + 1)}><Plus size={17} /></button>
               </div>
-              <button className="primary-btn" disabled={cart.inCart(product.id)} onClick={addQuantityToCart}>
+              <button className="primary-btn" disabled={cart.inCart(product.id) || product.availableForSale === false || !product.variantId || cart.isBusy || cart.isLoading} onClick={addQuantityToCart}>
                 <ShoppingBag size={18} />
-                {cart.inCart(product.id) ? 'Added to Cart' : 'Add to Cart'}
+                {product.availableForSale === false ? 'Sold Out' : !product.variantId || cart.isLoading ? 'Loading…' : cart.inCart(product.id) ? 'Added to Cart' : 'Add to Cart'}
               </button>
-              <button type="button" className="light-btn product-buy-now" onClick={buyNow}>Buy Now</button>
+              <button type="button" className="light-btn product-buy-now" disabled={product.availableForSale === false || !product.variantId || cart.isBusy || cart.isLoading} onClick={buyNow}>Buy Now</button>
             </div>
             <div className="product-benefits">
               <ProductBenefit icon={ShieldCheck} text="Secure Transaction" />
@@ -254,7 +302,7 @@ export default function ProductDetails() {
             <img src={product.image} alt="" />
             <div className="sticky-product-copy">
               <strong>{product.name}</strong>
-              <span>₹{product.price.toLocaleString('en-IN')}</span>
+              <span>{formatMoney(product.price, product.currencyCode || 'INR')}</span>
             </div>
           </div>
           <div className="sticky-product-right">
@@ -263,9 +311,9 @@ export default function ProductDetails() {
               <strong>{quantity}</strong>
               <button type="button" aria-label="Increase quantity" onClick={() => setQuantity((current) => current + 1)}><Plus size={16} /></button>
             </div>
-            <button type="button" className="primary-btn sticky-product-add" disabled={cart.inCart(product.id)} onClick={addQuantityToCart}>
+            <button type="button" className="primary-btn sticky-product-add" disabled={cart.inCart(product.id) || product.availableForSale === false || !product.variantId || cart.isBusy || cart.isLoading} onClick={addQuantityToCart}>
               <ShoppingBag size={17} />
-              {cart.inCart(product.id) ? 'Added to Cart' : 'Add to Cart'}
+              {product.availableForSale === false ? 'Sold Out' : !product.variantId || cart.isLoading ? 'Loading…' : cart.inCart(product.id) ? 'Added to Cart' : 'Add to Cart'}
             </button>
           </div>
         </div>

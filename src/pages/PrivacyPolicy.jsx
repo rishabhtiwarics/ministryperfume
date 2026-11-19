@@ -67,7 +67,7 @@ export default function PrivacyPolicy() {
                 <span className="policy-number">03</span>
                 <h2>Data Protection & Security</h2>
                 <p>
-                  We implement industry-standard encryption standards (SSL/TLS) for all data transfers. Payment details are handled securely by PCI-DSS compliant payment gateways like Razorpay; Avenlora never stores raw debit/credit card credentials.
+                  We use secure connections for data transfers. When you continue to checkout, Shopify and the payment providers available there process your payment information; this website does not collect or store your card details.
                 </p>
               </div>
 

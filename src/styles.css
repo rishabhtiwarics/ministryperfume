@@ -1335,6 +1335,20 @@ del {
   color: var(--ink);
 }
 
+.drawer-cart-product .cart-quantity-controls {
+  width: fit-content;
+  height: 30px;
+  margin-top: 8px;
+}
+
+.drawer-cart-product .qty-btn {
+  width: 28px;
+}
+
+.drawer-cart-product .qty-number {
+  min-width: 28px;
+}
+
 .cart-remove {
   width: 34px;
   height: 34px;
@@ -1376,6 +1390,10 @@ del {
 .image-banner.split {
   grid-template-columns: repeat(2, 1fr);
   gap: 0;
+}
+
+.image-banner-link {
+  display: contents;
 }
 
 .image-banner img {
@@ -1639,7 +1657,7 @@ del {
 }
 
 .inner-banner {
-  background-image: url('./img/innerbnnerimg.jpeg');
+  background-image: url('/inner-banner-desktop.jpeg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1980,7 +1998,7 @@ textarea {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: url("./img/authbg.jpeg") center/cover;
+  background: url("/auth-background.jpeg") center/cover;
 }
 
 .mp-card {
@@ -1999,7 +2017,7 @@ textarea {
 .mp-showcase {
   position: relative;
   overflow: hidden;
-  background: url("./img/authcardimg.jpeg") center/cover;
+  background: url("/auth-card-background.jpeg") center/cover;
   min-height: 100%;
   display: flex;
   align-items: flex-start;
@@ -2487,7 +2505,7 @@ textarea {
   }
 
   .inner-banner {
-    background-image: url('./img/mobileinnerbnnerimg.jpeg');
+    background-image: url('/inner-banner-mobile.jpeg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

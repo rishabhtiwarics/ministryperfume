@@ -1,21 +1,66 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CheckCircle2, CreditCard, PackagePlus, Search, ShieldCheck, SlidersHorizontal, Tag, Truck, WalletCards } from 'lucide-react';
 import ProductCard from '../components/shop/ProductCard.jsx';
-import { brandAssets, categories as homeCategories, products } from '../data/products.js';
+import { brandAssets, categories as localCategories, products as localProducts } from '../data/products.js';
+import { fetchShopifyCatalog, mapShopifyProduct } from '../lib/shopify.js';
 
 export default function Shop() {
   const [searchParams] = useSearchParams();
   const selectedCategory = searchParams.get('category');
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [status, setStatus] = useState('All products');
   const [category, setCategory] = useState(selectedCategory || 'all');
   const [sort, setSort] = useState('latest');
   const [itemsToShow, setItemsToShow] = useState(6);
+  const [catalog, setCatalog] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const categories = homeCategories.map((item) => ({ label: item.title, value: item.filter }));
+  useEffect(() => {
+    let active = true;
+    fetchShopifyCatalog()
+      .then((result) => {
+        if (active) setCatalog(result);
+      })
+      .catch((requestError) => {
+        if (active) setError(requestError.message);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    setCategory(selectedCategory || 'all');
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    setSearch(searchParams.get('search') || '');
+  }, [searchParams]);
+
+  const products = useMemo(() => {
+    if (!catalog) return localProducts;
+    return catalog.products.map(mapShopifyProduct);
+  }, [catalog]);
+
+  const categories = useMemo(() => [
+    ...(catalog
+      ? [
+          { label: 'All Fragrances', value: 'all' },
+          ...catalog.collections
+            .filter((collection) => collection.handle !== 'frontpage')
+            .map((collection) => ({ label: collection.title, value: collection.title }))
+        ]
+      : localCategories.map((item) => ({ label: item.title, value: item.filter })))
+  ], [catalog]);
+
   const filteredProducts = useMemo(() => products.filter((product) => {
     const query = search.trim().toLowerCase();
     const matchesSearch = !query || [product.name, product.category, product.description].some((value) => value.toLowerCase().includes(query));
@@ -24,12 +69,12 @@ export default function Shop() {
     const matchesMin = !minPrice || product.price >= Number(minPrice);
     const matchesMax = !maxPrice || product.price <= Number(maxPrice);
     return matchesSearch && matchesCategory && matchesStatus && matchesMin && matchesMax;
-  }), [search, minPrice, maxPrice, status, category]);
+  }), [products, search, minPrice, maxPrice, status, category]);
 
   const sortedProducts = useMemo(() => [...filteredProducts].sort((first, second) => {
     if (sort === 'low') return first.price - second.price;
     if (sort === 'high') return second.price - first.price;
-    return second.id - first.id;
+    return new Date(second.createdAt || 0).getTime() - new Date(first.createdAt || 0).getTime() || second.id - first.id;
   }), [filteredProducts, sort]);
 
   const displayedProducts = sortedProducts.slice(0, itemsToShow);
@@ -100,7 +145,9 @@ export default function Shop() {
             <div className="product-grid shop-grid">
               {displayedProducts.map((product) => <ProductCard key={product.id} product={product} variant="shop" />)}
             </div>
-            {!filteredProducts.length && <p className="shop-empty">No fragrances match these filters.</p>}
+            {loading && <p className="shop-empty" role="status">Showing saved products while Shopify updates…</p>}
+            {error && <p className="shop-empty" role="alert">Could not load Shopify products: {error}</p>}
+            {!loading && !error && !filteredProducts.length && <p className="shop-empty">No fragrances match these filters.</p>}
 
             <div className="shop-product-banner">
               <img src={brandAssets.shopProductBanner} alt="Ministry Perfume Special Collection" />

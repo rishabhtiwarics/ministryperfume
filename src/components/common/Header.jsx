@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { products, brandAssets, categories } from '../../data/products.js';
 import ProductCard from '../shop/ProductCard.jsx';
 import { useCart } from '../../context/CartContext.jsx';
+import { fetchShopifyMenu, getShopifyMenuHref } from '../../lib/shopify.js';
 
 const links = [
   { label: 'Home', path: '/' },
@@ -12,25 +13,46 @@ const links = [
   { label: 'Shop', path: '/shop', mega: true },
   { label: 'Contact', path: '/contact' }
 ];
-const mobileLinks = [
-  { label: 'Home', path: '/' },
-  { label: 'About', path: '/about' },
-  { label: 'Contact', path: '/contact' }
-];
-
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [navigationLinks, setNavigationLinks] = useState(links);
+  const [menuError, setMenuError] = useState('');
   const { count, setIsCartOpen } = useCart();
+
+  useEffect(() => {
+    let active = true;
+    fetchShopifyMenu('header-menu')
+      .then((menu) => {
+        if (active) {
+          setNavigationLinks(menu.items.map((item) => ({
+            label: item.title,
+            path: getShopifyMenuHref(item),
+            mega: item.title.toLowerCase() === 'shop'
+          })));
+        }
+      })
+      .catch(() => {
+        if (active) setMenuError('Shopify header menu could not load; showing local links.');
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <header className="site-header">
       <div className="header-inner container">
         <Link to="/" className="logo"><img src={brandAssets.blackLogo} alt="Ministry Perfume" /></Link>
         <nav className="desktop-nav">
-          {links.map((link) => (
-            <div className="nav-item" key={link.path}>
-              <NavLink to={link.path} className={({ isActive }) => isActive ? 'active' : ''}>{link.label}</NavLink>
+          {navigationLinks.map((link) => (
+            <div className="nav-item" key={`${link.label}-${link.path}`}>
+              {link.path.startsWith('/') ? (
+                <NavLink to={link.path} className={({ isActive }) => isActive ? 'active' : ''}>{link.label}</NavLink>
+              ) : (
+                <a href={link.path}>{link.label}</a>
+              )}
               {link.mega && <MegaMenu />}
             </div>
           ))}
@@ -47,13 +69,16 @@ export default function Header() {
           <button className="icon-btn mobile-only" aria-label="Open menu" onClick={() => setMenuOpen(true)}><Menu size={22} /></button>
         </div>
       </div>
+      {menuError && <p className="shopify-menu-status" role="status">{menuError}</p>}
       <div className={`mobile-drawer ${menuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <img src={brandAssets.whiteLogo} alt="Ministry Perfume" />
           <button className="icon-btn sidebar-close" aria-label="Close menu" onClick={() => setMenuOpen(false)}><X size={22} /></button>
         </div>
         <div className="sidebar-main">
-          <nav className="mobile-nav-list">{mobileLinks.map(({ label, path }) => <NavLink key={path} to={path} onClick={() => setMenuOpen(false)}>{label}</NavLink>)}</nav>
+          <nav className="mobile-nav-list">{navigationLinks.map(({ label, path }) => path.startsWith('/')
+            ? <NavLink key={`${label}-${path}`} to={path} onClick={() => setMenuOpen(false)}>{label}</NavLink>
+            : <a key={`${label}-${path}`} href={path} onClick={() => setMenuOpen(false)}>{label}</a>)}</nav>
           <Link className="sidebar-mini-banner" to="/shop" onClick={() => setMenuOpen(false)}><img src={brandAssets.sidebarBannerImg} alt="Ministry Perfume" /></Link>
           <div className="mobile-user-wrap"><UserPanel compact /></div>
         </div>
@@ -165,11 +190,12 @@ function UserPanel({ compact = false }) {
 }
 
 function MegaMenu() {
+  const shopCategories = categories.filter((category) => category.filter !== 'Combo');
   return (
     <div className="mega-menu">
       <div><span className="eyebrow">Shop By Mood</span><h3>Signature Ministry Perfumes</h3><p>Premium oud, fresh, floral, and gifting fragrances in one refined collection.</p></div>
       <div className="mega-grid mega-category-grid">
-        {categories.map((cat) => {
+        {shopCategories.map((cat) => {
           const to = cat.filter === 'all' ? '/shop' : `/shop?category=${encodeURIComponent(cat.filter)}`;
           return (
             <Link className="mega-category-card" to={to} key={cat.title}>

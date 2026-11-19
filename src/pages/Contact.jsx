@@ -1,7 +1,6 @@
 import React from 'react';
 import { Mail, Phone, User, MessageSquare, Send, MapPin, Clock } from 'lucide-react';
 import InnerBanner from '../components/common/InnerBanner.jsx';
-import contactImg from '../img/categories/categorie1.jpeg';
 
 export default function Contact() {
   return (
@@ -18,7 +17,7 @@ export default function Contact() {
           <div className="contact-card">
             {/* Left side: Image */}
             <div className="contact-card-left">
-              <img src={contactImg} alt="Avenlora Fragrances" className="contact-card-img" />
+              <img src="/category-men.jpeg" alt="Avenlora Fragrances" className="contact-card-img" />
             </div>
 
             {/* Right side: Contact Form with input icons */}

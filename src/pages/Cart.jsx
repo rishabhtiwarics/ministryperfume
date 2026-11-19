@@ -2,10 +2,10 @@ import React from 'react';
 import { ArrowLeft, ShoppingBag, ArrowRight } from 'lucide-react';
 import ProductCard from '../components/shop/ProductCard.jsx';
 import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext.jsx';
+import { formatMoney, useCart } from '../context/CartContext.jsx';
 
 export default function Cart() {
-  const { items, subtotal } = useCart();
+  const { items, subtotal, total, currencyCode, isLoading, error, clearError } = useCart();
 
   return (
     <section className="cart-page-section">
@@ -25,10 +25,13 @@ export default function Cart() {
         {/* Cart Content Layout */}
         <div className="cart-page-layout">
           <div className="cart-items-container">
-            {items.length ? (
+            {error && <p className="shop-empty" role="alert">{error}<button type="button" onClick={clearError} aria-label="Dismiss cart error">Dismiss</button></p>}
+            {isLoading ? (
+              <p role="status">Loading your Shopify cart…</p>
+            ) : items.length ? (
               <div className="cart-products-list">
                 {items.map((item) => (
-                  <ProductCard key={item.id} product={item} variant="cart" />
+                  <ProductCard key={item.lineId} product={item} variant="cart" />
                 ))}
               </div>
             ) : (
@@ -51,7 +54,7 @@ export default function Cart() {
               <h3 className="summary-title">Order Summary</h3>
               <div className="summary-row">
                 <span>Subtotal</span>
-                <strong>₹{subtotal.toLocaleString('en-IN')}</strong>
+                <strong>{formatMoney(subtotal, currencyCode)}</strong>
               </div>
               <div className="summary-row">
                 <span>Shipping</span>
@@ -59,8 +62,8 @@ export default function Cart() {
               </div>
               <div className="summary-divider"></div>
               <div className="summary-row total-row">
-                <span>Estimated Total</span>
-                <strong>₹{subtotal.toLocaleString('en-IN')}</strong>
+                <span>Estimated total</span>
+                <strong>{formatMoney(total, currencyCode)}</strong>
               </div>
               <Link className="checkout-btn full" to="/checkout">
                 <span>PROCEED TO CHECKOUT</span>
