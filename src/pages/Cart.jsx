@@ -3,9 +3,10 @@ import { ArrowLeft, ShoppingBag, ArrowRight } from 'lucide-react';
 import ProductCard from '../components/shop/ProductCard.jsx';
 import { Link } from 'react-router-dom';
 import { formatMoney, useCart } from '../context/CartContext.jsx';
+import DiscountCodeForm from '../components/common/DiscountCodeForm.jsx';
 
 export default function Cart() {
-  const { items, subtotal, total, currencyCode, isLoading, error, clearError } = useCart();
+  const { items, subtotal, total, currencyCode, isLoading, hasUnavailableItems, error, clearError } = useCart();
 
   return (
     <section className="cart-page-section">
@@ -60,15 +61,18 @@ export default function Cart() {
                 <span>Shipping</span>
                 <span className="free-shipping">Calculated at Checkout</span>
               </div>
+              <DiscountCodeForm />
               <div className="summary-divider"></div>
               <div className="summary-row total-row">
                 <span>Estimated total</span>
                 <strong>{formatMoney(total, currencyCode)}</strong>
               </div>
-              <Link className="checkout-btn full" to="/checkout">
-                <span>PROCEED TO CHECKOUT</span>
-                <ArrowRight size={18} />
-              </Link>
+              {hasUnavailableItems
+                ? <button className="checkout-btn full" type="button" disabled>Remove sold-out items to checkout</button>
+                : <Link className="checkout-btn full" to="/checkout">
+                    <span>PROCEED TO CHECKOUT</span>
+                    <ArrowRight size={18} />
+                  </Link>}
             </aside>
           )}
         </div>

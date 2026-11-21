@@ -4,7 +4,7 @@ import { Banknote, ChevronDown, ChevronLeft, ChevronRight, MapPinned, Minus, Pau
 import { products as localProducts } from '../data/products.js';
 import { formatMoney, useCart } from '../context/CartContext.jsx';
 import ProductSection from '../components/home/ProductSection.jsx';
-import { fetchShopifyCatalog, mapShopifyProduct } from '../lib/shopify.js';
+import { fetchShopifyCatalog, fetchShopifyProductVariants, mapShopifyProduct } from '../lib/shopify.js';
 
 const howToApplyImg = '/product-how-to-apply.jpeg';
 const productDetailSingleImg = '/product-detail-single.jpeg';
@@ -18,6 +18,7 @@ export default function ProductDetails() {
   const [shopifyProduct, setShopifyProduct] = useState(null);
   const [shopifyRelatedProducts, setShopifyRelatedProducts] = useState(null);
   const [productError, setProductError] = useState('');
+  const [variantError, setVariantError] = useState('');
   const [productLoading, setProductLoading] = useState(true);
   const product = shopifyProduct || localProduct;
   const cart = useCart();
@@ -25,28 +26,59 @@ export default function ProductDetails() {
   const images = product?.images?.length ? product.images : product?.image ? [product.image] : [];
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [selectedOptions, setSelectedOptions] = useState({});
   const [showSticky, setShowSticky] = useState(false);
   const [openAccordion, setOpenAccordion] = useState('description');
   const [openFaq, setOpenFaq] = useState(null);
   const selectedImage = images[activeImage] || images[0];
   const relatedProducts = shopifyRelatedProducts || localProducts.filter((item) => item.slug !== product?.slug);
   const tags = product?.tags?.length ? product.tags : [product?.category, product?.badge].filter(Boolean);
+  const productOptions = product?.options?.filter((option) =>
+    option.name.toLowerCase() !== 'title' && option.values.length > 1
+  ) || [];
+  const variants = product?.variants || [];
+  const selectedVariant = variants.find((variant) =>
+    variant.selectedOptions.every(({ name, value }) => selectedOptions[name] === value)
+  ) || (Object.keys(selectedOptions).length < productOptions.length
+    ? variants.find((variant) => variant.availableForSale) || variants[0]
+    : null);
+  const purchaseProduct = selectedVariant
+    ? {
+        ...product,
+        variantId: selectedVariant.id,
+        price: selectedVariant.price,
+        oldPrice: selectedVariant.compareAtPrice,
+        currencyCode: selectedVariant.currencyCode,
+        availableForSale: selectedVariant.availableForSale,
+        variantAvailableForSale: selectedVariant.availableForSale
+      }
+    : product;
+  const selectedVariantInCart = Boolean(selectedVariant && cart.inCart(selectedVariant.id));
 
   useEffect(() => {
     let active = true;
     setShopifyProduct(null);
     setShopifyRelatedProducts(null);
     setProductError('');
+    setVariantError('');
     setProductLoading(true);
 
     fetchShopifyCatalog()
-      .then((catalog) => {
+      .then(async (catalog) => {
         if (!active) return;
         const catalogProducts = catalog.products.map(mapShopifyProduct);
         const result = catalogProducts.find((item) => item.slug === slug);
         if (result) {
           setShopifyProduct(result);
           setShopifyRelatedProducts(catalogProducts.filter((item) => item.slug !== slug));
+          try {
+            const variantData = await fetchShopifyProductVariants(slug);
+            if (active) setShopifyProduct((current) =>
+              current?.id === result.id ? { ...current, ...variantData } : current
+            );
+          } catch (error) {
+            if (active) setVariantError(error.message);
+          }
         } else {
           setProductError(`The Shopify product "${slug}" was not found.`);
         }
@@ -67,18 +99,22 @@ export default function ProductDetails() {
     if (!product) return undefined;
     setActiveImage(0);
     setQuantity(1);
+    const defaultVariant = product.variants?.find((variant) => variant.availableForSale) || product.variants?.[0];
+    setSelectedOptions(Object.fromEntries(
+      (defaultVariant?.selectedOptions || []).map(({ name, value }) => [name, value])
+    ));
     const onScroll = () => setShowSticky(Boolean(detailsRef.current && detailsRef.current.getBoundingClientRect().bottom < 0));
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [product?.id, slug]);
+  }, [product?.id, product?.variants, slug]);
 
   const selectImage = (index) => setActiveImage(index);
   const moveMainImage = (direction) => selectImage(activeImage + direction);
-  const addQuantityToCart = () => cart.addToCart(product, quantity);
+  const addQuantityToCart = () => cart.addToCart(purchaseProduct, quantity);
   const buyNow = async () => {
-    if (!product || product.availableForSale === false) return;
-    if (!cart.inCart(product.id) && !(await addQuantityToCart())) return;
+    if (!product || !selectedVariant?.availableForSale) return;
+    if (!selectedVariantInCart && !(await addQuantityToCart())) return;
     navigate('/checkout');
   };
 
@@ -137,12 +173,34 @@ export default function ProductDetails() {
                 {Array.from({ length: 5 }).map((_, index) => <Star key={index} size={15} fill={index < Math.round(product.rating) ? 'currentColor' : 'none'} />)}
                 <strong>{product.rating.toFixed(1)}</strong>
               </span>
-              <span className="detail-stock"><i />{product.availableForSale === false ? 'Out of Stock' : 'In Stock'}</span>
+              <span className="detail-stock"><i />{!selectedVariant ? 'Unavailable option' : selectedVariant.availableForSale ? 'In Stock' : 'Out of Stock'}</span>
             </div>
             <div className="price big">
-              <strong>{formatMoney(product.price, product.currencyCode || 'INR')}</strong>
-              {product.oldPrice > product.price && <del>{formatMoney(product.oldPrice, product.currencyCode || 'INR')}</del>}
+              <strong>{selectedVariant ? formatMoney(selectedVariant.price, selectedVariant.currencyCode) : 'Unavailable'}</strong>
+              {selectedVariant && selectedVariant.compareAtPrice > selectedVariant.price && <del>{formatMoney(selectedVariant.compareAtPrice, selectedVariant.currencyCode)}</del>}
             </div>
+
+            {variantError && <p className="shop-empty" role="status">Could not load Shopify product options: {variantError}</p>}
+            {productOptions.map((option) => (
+              <label className="product-option" key={option.name}>
+                <span>{option.name}</span>
+                <select
+                  aria-label={`Choose ${option.name}`}
+                  value={selectedOptions[option.name] || ''}
+                  onChange={(event) => setSelectedOptions((current) => ({ ...current, [option.name]: event.target.value }))}
+                >
+                  {option.values.map((value) => (
+                    <option
+                      key={value}
+                      value={value}
+                      disabled={!isVariantOptionAvailable(variants, selectedOptions, option.name, value)}
+                    >
+                      {value}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ))}
 
             <p className="shipping-notice">* Ships within 24-36 hours of ordering.</p>
 
@@ -199,11 +257,11 @@ export default function ProductDetails() {
                 <strong>{quantity}</strong>
                 <button type="button" aria-label="Increase quantity" onClick={() => setQuantity((current) => current + 1)}><Plus size={17} /></button>
               </div>
-              <button className="primary-btn" disabled={cart.inCart(product.id) || product.availableForSale === false || !product.variantId || cart.isBusy || cart.isLoading} onClick={addQuantityToCart}>
+              <button className="primary-btn" disabled={!selectedVariant || !selectedVariant.availableForSale || !purchaseProduct.variantId || selectedVariantInCart || cart.isBusy || cart.isLoading} onClick={addQuantityToCart}>
                 <ShoppingBag size={18} />
-                {product.availableForSale === false ? 'Sold Out' : !product.variantId || cart.isLoading ? 'Loading…' : cart.inCart(product.id) ? 'Added to Cart' : 'Add to Cart'}
+                {!selectedVariant ? 'Unavailable' : !selectedVariant.availableForSale ? 'Sold Out' : !purchaseProduct.variantId || cart.isLoading ? 'Loading…' : selectedVariantInCart ? 'Added to Cart' : 'Add to Cart'}
               </button>
-              <button type="button" className="light-btn product-buy-now" disabled={product.availableForSale === false || !product.variantId || cart.isBusy || cart.isLoading} onClick={buyNow}>Buy Now</button>
+              <button type="button" className="light-btn product-buy-now" disabled={!selectedVariant || !selectedVariant.availableForSale || !purchaseProduct.variantId || cart.isBusy || cart.isLoading} onClick={buyNow}>Buy Now</button>
             </div>
             <div className="product-benefits">
               <ProductBenefit icon={ShieldCheck} text="Secure Transaction" />
@@ -302,7 +360,7 @@ export default function ProductDetails() {
             <img src={product.image} alt="" />
             <div className="sticky-product-copy">
               <strong>{product.name}</strong>
-              <span>{formatMoney(product.price, product.currencyCode || 'INR')}</span>
+              <span>{selectedVariant ? formatMoney(selectedVariant.price, selectedVariant.currencyCode) : 'Unavailable'}</span>
             </div>
           </div>
           <div className="sticky-product-right">
@@ -311,9 +369,9 @@ export default function ProductDetails() {
               <strong>{quantity}</strong>
               <button type="button" aria-label="Increase quantity" onClick={() => setQuantity((current) => current + 1)}><Plus size={16} /></button>
             </div>
-            <button type="button" className="primary-btn sticky-product-add" disabled={cart.inCart(product.id) || product.availableForSale === false || !product.variantId || cart.isBusy || cart.isLoading} onClick={addQuantityToCart}>
+            <button type="button" className="primary-btn sticky-product-add" disabled={!selectedVariant || !selectedVariant.availableForSale || !purchaseProduct.variantId || selectedVariantInCart || cart.isBusy || cart.isLoading} onClick={addQuantityToCart}>
               <ShoppingBag size={17} />
-              {product.availableForSale === false ? 'Sold Out' : !product.variantId || cart.isLoading ? 'Loading…' : cart.inCart(product.id) ? 'Added to Cart' : 'Add to Cart'}
+              {!selectedVariant ? 'Unavailable' : !selectedVariant.availableForSale ? 'Sold Out' : !purchaseProduct.variantId || cart.isLoading ? 'Loading…' : selectedVariantInCart ? 'Added to Cart' : 'Add to Cart'}
             </button>
           </div>
         </div>
@@ -324,6 +382,14 @@ export default function ProductDetails() {
 
 function ProductBenefit({ icon: Icon, text }) {
   return <div><Icon size={19} /><span>{text}</span></div>;
+}
+
+function isVariantOptionAvailable(variants, selectedOptions, optionName, value) {
+  return variants.some((variant) => variant.availableForSale
+    && variant.selectedOptions.some((option) => option.name === optionName && option.value === value)
+    && variant.selectedOptions
+      .filter((option) => option.name !== optionName)
+      .every((option) => !selectedOptions[option.name] || selectedOptions[option.name] === option.value));
 }
 
 function GalleryVideoItem({ src, isMain, isThumb }) {

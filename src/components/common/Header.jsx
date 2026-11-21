@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import { products, brandAssets, categories } from '../../data/products.js';
 import ProductCard from '../shop/ProductCard.jsx';
 import { useCart } from '../../context/CartContext.jsx';
-import { fetchShopifyMenu, getShopifyMenuHref } from '../../lib/shopify.js';
+import { useCustomerAccount } from '../../context/CustomerAccountContext.jsx';
+import { fetchShopifyCatalog, fetchShopifyMenu, getShopifyMenuHref, mapShopifyProduct } from '../../lib/shopify.js';
 
 const links = [
   { label: 'Home', path: '/' },
@@ -15,7 +16,6 @@ const links = [
 ];
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [navigationLinks, setNavigationLinks] = useState(links);
   const [menuError, setMenuError] = useState('');
   const { count, setIsCartOpen } = useCart();
@@ -59,9 +59,9 @@ export default function Header() {
         </nav>
         <div className="header-actions">
           <div className="search-mega-item">
-            <button className="icon-btn search-action" aria-label="Search" onClick={() => setSearchOpen(true)}>
+            <span className="icon-btn search-action" aria-hidden="true">
               <Search size={21} />
-            </button>
+            </span>
             <SearchMegaDropdown />
           </div>
           <UserMenu />
@@ -84,26 +84,37 @@ export default function Header() {
         </div>
         <div className="sidebar-footer"><span>Follow Ministry Perfume</span><div className="sidebar-socials"><a href="#" aria-label="Facebook"><Facebook size={18} /></a><a href="#" aria-label="Instagram"><Instagram size={18} /></a></div></div>
       </div>
-      <div className={`overlay ${menuOpen || searchOpen ? 'show' : ''}`} onClick={() => { setMenuOpen(false); setSearchOpen(false); }} />
-      <div className={`search-panel ${searchOpen ? 'open' : ''}`}>
-        <div className="drawer-head"><strong>Search Ministry Perfume</strong><button className="icon-btn" onClick={() => setSearchOpen(false)}><X size={22} /></button></div>
-        <label className="search-box"><Search size={18} /><input placeholder="Search perfume" autoFocus={searchOpen} /></label>
-        <div className="search-results">{products.slice(0, 3).map((product) => <ProductCard key={product.id} product={product} variant="search" />)}</div>
-      </div>
+      <div className={`overlay ${menuOpen ? 'show' : ''}`} onClick={() => setMenuOpen(false)} />
     </header>
   );
 }
 
 function SearchMegaDropdown() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [catalogProducts, setCatalogProducts] = useState(null);
+
+  useEffect(() => {
+    let active = true;
+    fetchShopifyCatalog()
+      .then((catalog) => {
+        if (active) setCatalogProducts(catalog.products.map(mapShopifyProduct));
+      })
+      .catch(() => {
+        if (active) setCatalogProducts(null);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const filteredProducts = searchTerm.trim() === ''
     ? []
-    : products.filter((item) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+    : (catalogProducts || products).filter((item) => {
+        const query = searchTerm.trim().toLowerCase();
+        return [item.name, item.category, item.description, ...(item.tags || [])]
+          .filter(Boolean)
+          .some((value) => String(value).toLowerCase().includes(query));
+      });
 
   return (
     <div className="search-mega-dropdown" onMouseLeave={() => setSearchTerm('')}>
@@ -175,15 +186,16 @@ function UserMenu() {
 
 function UserPanel({ compact = false }) {
   const [role, setRole] = useState('guest');
-  useEffect(() => setRole(localStorage.getItem('ministryPerfumeRole') || 'guest'), []);
+  const { customer, isAuthenticated, logout: logoutCustomer } = useCustomerAccount();
+  useEffect(() => setRole(localStorage.getItem('ministryPerfumeRole') === 'admin' ? 'admin' : 'guest'), []);
   const logout = () => { localStorage.removeItem('ministryPerfumeRole'); setRole('guest'); };
 
   if (role === 'admin') {
     return <div className={`user-panel ${compact ? 'compact' : ''}`}><span className="eyebrow">Admin Login</span><div className="user-row"><span className="avatar admin"><ShieldCheck size={20} /></span><div><strong>Ministry Perfume Admin</strong><small>admin@ministryperfume.com</small></div></div><Link to="/admin/dashboard" className="user-link"><LayoutDashboard size={17} /> Dashboard</Link><Link to="/profile" className="user-link"><UserRound size={17} /> Admin User Profile</Link><button className="logout-btn" onClick={logout}><LogOut size={17} /> Logout</button></div>;
   }
 
-  if (role === 'user') {
-    return <div className={`user-panel ${compact ? 'compact' : ''}`}><span className="eyebrow">User Login</span><div className="user-row"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=85" alt="User" /><div><strong>Ayesha Khan</strong><small>ayesha@ministryperfume.com</small></div></div><Link to="/profile" className="user-link"><UserRound size={17} /> User Profile</Link><button className="logout-btn" onClick={logout}><LogOut size={17} /> Logout</button></div>;
+  if (isAuthenticated) {
+    return <div className={`user-panel ${compact ? 'compact' : ''}`}><span className="eyebrow">My Account</span><div className="user-row"><span className="avatar"><UserRound size={20} /></span><div><strong>{customer.displayName}</strong><small>{customer.email}</small></div></div><Link to="/profile" className="user-link"><UserRound size={17} /> My Account & Orders</Link><button className="logout-btn" onClick={logoutCustomer}><LogOut size={17} /> Sign out</button></div>;
   }
 
   return <div className={`user-panel ${compact ? 'compact' : ''}`}><span className="eyebrow">My Account</span><h3>Login to your Ministry Perfume account</h3><p>Access orders, saved perfumes, and faster checkout.</p><div className="auth-actions"><Link to="/auth/login" className="primary-btn">Login</Link><Link to="/auth/register" className="light-btn">Register</Link></div></div>;

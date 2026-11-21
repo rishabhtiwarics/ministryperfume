@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { CartProvider } from './context/CartContext.jsx';
+import { CustomerAccountProvider } from './context/CustomerAccountContext.jsx';
 import Layout from './components/common/Layout.jsx';
 import Home from './pages/Home.jsx';
 import About from './pages/About.jsx';
@@ -15,6 +16,7 @@ import RefundPolicy from './pages/RefundPolicy.jsx';
 import Login from './pages/auth/Login.jsx';
 import Register from './pages/auth/Register.jsx';
 import ForgotPassword from './pages/auth/ForgotPassword.jsx';
+import CustomerAccountCallback from './pages/auth/Callback.jsx';
 import Profile from './pages/Profile.jsx';
 import Dashboard from './pages/admin/Dashboard.jsx';
 
@@ -37,27 +39,30 @@ export default function App() {
   const isAuthPage = location.pathname.startsWith('/auth');
 
   return (
-    <CartProvider>
-      <ScrollToTop />
-      <Layout hideChrome={isAuthPage}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/shop/:slug" element={<ProductDetails />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-condition" element={<TermsCondition />} />
-          <Route path="/refund-policy" element={<RefundPolicy />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin/dashboard" element={<Dashboard />} />
-          <Route path="/auth/login" element={<Login />} />
-          <Route path="/auth/register" element={<Register />} />
-          <Route path="/auth/forgot-password" element={<ForgotPassword />} />
-        </Routes>
-      </Layout>
-    </CartProvider>
+    <CustomerAccountProvider>
+      <CartProvider>
+        <ScrollToTop />
+        <Layout hideChrome={isAuthPage}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/shop/:slug" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-condition" element={<TermsCondition />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="/auth/login" element={<Login />} />
+            <Route path="/auth/register" element={<Register />} />
+            <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+            <Route path="/auth/callback" element={<CustomerAccountCallback />} />
+          </Routes>
+        </Layout>
+      </CartProvider>
+    </CustomerAccountProvider>
   );
 }

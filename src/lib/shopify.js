@@ -36,7 +36,12 @@ const CATALOG_QUERY = `query Catalog($first: Int!) {
           edges {
             node {
               id
+              title
               availableForSale
+              selectedOptions {
+                name
+                value
+              }
               price {
                 amount
                 currencyCode
@@ -120,6 +125,10 @@ const CART_FIELDS = `fragment CartFields on Cart {
       currencyCode
     }
   }
+  discountCodes {
+    code
+    applicable
+  }
   lines(first: 100) {
     edges {
       node {
@@ -151,6 +160,39 @@ const CART_FIELDS = `fragment CartFields on Cart {
             }
           }
         }
+      }
+    }
+  }
+}`;
+const PRODUCT_VARIANTS_QUERY = `query ProductVariants($handle: String!, $first: Int!, $after: String) {
+  product(handle: $handle) {
+    options {
+      name
+      values
+    }
+    variants(first: $first, after: $after) {
+      edges {
+        node {
+          id
+          title
+          availableForSale
+          selectedOptions {
+            name
+            value
+          }
+          price {
+            amount
+            currencyCode
+          }
+          compareAtPrice {
+            amount
+            currencyCode
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
   }
@@ -199,6 +241,18 @@ const CART_LINES_UPDATE_MUTATION = `mutation CartLinesUpdate($cartId: ID!, $line
 ${CART_FIELDS}`;
 const CART_LINES_REMOVE_MUTATION = `mutation CartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
   cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+    cart {
+      ...CartFields
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}
+${CART_FIELDS}`;
+const CART_DISCOUNT_CODES_UPDATE_MUTATION = `mutation CartDiscountCodesUpdate($cartId: ID!, $discountCodes: [String!]!) {
+  cartDiscountCodesUpdate(cartId: $cartId, discountCodes: $discountCodes) {
     cart {
       ...CartFields
     }
@@ -269,7 +323,16 @@ export async function fetchShopifyCatalog(first = 50) {
 
 export function mapShopifyProduct(product) {
   const localProduct = localProducts.find((item) => item.slug === product.handle);
-  const variant = product.variants.edges[0]?.node;
+  const variants = product.variants.edges.map(({ node }) => ({
+    id: node.id,
+    title: node.title,
+    availableForSale: node.availableForSale,
+    selectedOptions: node.selectedOptions || [],
+    price: Number(node.price.amount),
+    currencyCode: node.price.currencyCode,
+    compareAtPrice: node.compareAtPrice ? Number(node.compareAtPrice.amount) : 0
+  }));
+  const variant = variants.find((item) => item.availableForSale) || variants[0];
   const collections = product.collections?.edges || [];
   const categoryCollection = collections.find(({ node }) => ['men', 'women'].includes(node.handle))?.node;
   const image = product.featuredImage?.url || localProduct?.image || '';
@@ -279,12 +342,14 @@ export function mapShopifyProduct(product) {
   return {
     id: product.id,
     variantId: variant?.id,
+    variants,
     slug: product.handle,
     name: product.title,
     category: categoryCollection?.title || tags.find((tag) => ['Men', 'Women'].includes(tag)) || product.productType || '',
     price: Number(product.priceRange?.minVariantPrice?.amount ?? variant?.price?.amount ?? localProduct?.price ?? 0),
     currencyCode: product.priceRange?.minVariantPrice?.currencyCode || variant?.price?.currencyCode || 'INR',
     oldPrice: Number(variant?.compareAtPrice?.amount || 0),
+    variantAvailableForSale: variant?.availableForSale,
     rating: localProduct?.rating ?? 4,
     image,
     images: image ? [image] : [],
@@ -296,6 +361,42 @@ export function mapShopifyProduct(product) {
     createdAt: product.createdAt,
     availableForSale: product.availableForSale
   };
+}
+
+export async function fetchShopifyProductVariants(handle) {
+  if (!handle?.trim()) {
+    throw new TypeError('A Shopify product handle is required to fetch variants.');
+  }
+
+  const options = [];
+  const variants = [];
+  let after = null;
+  let hasNextPage = true;
+
+  while (hasNextPage) {
+    const data = await shopifyGraphql(PRODUCT_VARIANTS_QUERY, {
+      handle: handle.trim(),
+      first: 100,
+      after
+    });
+    if (!data.product) {
+      throw new Error(`Shopify product "${handle}" was not found.`);
+    }
+    if (!options.length) options.push(...data.product.options);
+    variants.push(...data.product.variants.edges.map(({ node }) => ({
+      id: node.id,
+      title: node.title,
+      availableForSale: node.availableForSale,
+      selectedOptions: node.selectedOptions,
+      price: Number(node.price.amount),
+      currencyCode: node.price.currencyCode,
+      compareAtPrice: node.compareAtPrice ? Number(node.compareAtPrice.amount) : 0
+    })));
+    hasNextPage = data.product.variants.pageInfo.hasNextPage;
+    after = data.product.variants.pageInfo.endCursor;
+  }
+
+  return { options, variants };
 }
 
 export async function fetchShopifyMenu(handle) {
@@ -375,6 +476,15 @@ export async function updateShopifyCartLines(cartId, lines) {
 export async function removeShopifyCartLines(cartId, lineIds) {
   const data = await shopifyGraphql(CART_LINES_REMOVE_MUTATION, { cartId, lineIds });
   return getCartOrThrow(data.cartLinesRemove, 'update');
+}
+
+export async function updateShopifyCartDiscountCodes(cartId, discountCodes) {
+  if (!cartId?.trim()) throw new TypeError('A Shopify cart ID is required to update discount codes.');
+  if (!Array.isArray(discountCodes) || discountCodes.some((code) => typeof code !== 'string' || !code.trim())) {
+    throw new TypeError('Shopify discount codes must be a list of non-empty strings.');
+  }
+  const data = await shopifyGraphql(CART_DISCOUNT_CODES_UPDATE_MUTATION, { cartId, discountCodes });
+  return getCartOrThrow(data.cartDiscountCodesUpdate, 'discount update');
 }
 
 export function getShopifyMenuHref(item) {

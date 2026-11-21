@@ -4,8 +4,10 @@ import {
   createShopifyCart,
   fetchShopifyCart,
   removeShopifyCartLines,
+  updateShopifyCartDiscountCodes,
   updateShopifyCartLines
 } from '../lib/shopify.js';
+import { cartHasUnavailableItems, getProductAvailability } from '../lib/productAvailability.js';
 
 const CartContext = createContext(null);
 const CART_STORAGE_KEY = 'ministryPerfumeShopifyCartId';
@@ -18,6 +20,7 @@ function mapShopifyCart(cart) {
     subtotal: Number(cart.cost.subtotalAmount.amount),
     total: Number(cart.cost.totalAmount.amount),
     currencyCode: cart.cost.subtotalAmount.currencyCode,
+    discountCodes: cart.discountCodes || [],
     items: cart.lines.edges.map(({ node }) => {
       const variant = node.merchandise;
       return {
@@ -106,8 +109,8 @@ export function CartProvider({ children }) {
     setError('');
 
     try {
-      await mutation();
-      return true;
+      const result = await mutation();
+      return result === undefined ? true : result;
     } catch (mutationError) {
       setError(mutationError.message);
       setIsCartOpen(true);
@@ -119,11 +122,15 @@ export function CartProvider({ children }) {
   }, [isLoading]);
 
   const addToCart = useCallback((product, quantity = 1) => runMutation(async () => {
-    if (!product.variantId) {
+    const availability = getProductAvailability(product);
+    if (availability === 'loading') {
       throw new Error('This product is not ready to add to your Shopify cart yet. Please wait for Shopify product data to load.');
     }
-    if (product.availableForSale === false) {
+    if (availability === 'sold-out') {
       throw new Error(`${product.name} is currently unavailable.`);
+    }
+    if (availability === 'choose-options') {
+      throw new Error(`The selected option for ${product.name} is currently unavailable.`);
     }
     if (!Number.isInteger(quantity) || quantity < 1) {
       throw new RangeError('Cart quantity must be a positive integer.');
@@ -147,9 +154,40 @@ export function CartProvider({ children }) {
   const updateQuantity = useCallback((lineId, quantity) => runMutation(async () => {
     const currentCart = cartRef.current;
     if (!currentCart) throw new Error('There is no active Shopify cart.');
+    const item = currentCart.items.find((cartItem) => cartItem.lineId === lineId);
+    if (quantity > (item?.quantity || 0) && item?.availableForSale === false) {
+      throw new Error(`${item.name} is sold out and cannot be increased.`);
+    }
     const nextCart = quantity < 1
       ? await removeShopifyCartLines(currentCart.id, [lineId])
       : await updateShopifyCartLines(currentCart.id, [{ id: lineId, quantity }]);
+    saveCart(nextCart);
+  }), [runMutation, saveCart]);
+
+  const applyDiscountCode = useCallback((code) => runMutation(async () => {
+    const normalizedCode = code.trim();
+    if (!normalizedCode) throw new TypeError('Enter a discount code to apply.');
+    const currentCart = cartRef.current;
+    if (!currentCart) throw new Error('Add an item to your Shopify cart before applying a discount code.');
+    const existingCodes = currentCart.discountCodes.map(({ code: existingCode }) => existingCode);
+    const codes = existingCodes.some((existingCode) => existingCode.toLowerCase() === normalizedCode.toLowerCase())
+      ? existingCodes
+      : [...existingCodes, normalizedCode];
+    const nextCart = await updateShopifyCartDiscountCodes(currentCart.id, codes);
+    saveCart(nextCart);
+    const applicable = nextCart.discountCodes.some((discount) =>
+      discount.code.toLowerCase() === normalizedCode.toLowerCase() && discount.applicable
+    );
+    return applicable ? 'applied' : 'invalid';
+  }), [runMutation, saveCart]);
+
+  const removeDiscountCode = useCallback((code) => runMutation(async () => {
+    const currentCart = cartRef.current;
+    if (!currentCart) throw new Error('There is no active Shopify cart.');
+    const remainingCodes = currentCart.discountCodes
+      .filter((discount) => discount.code.toLowerCase() !== code.toLowerCase())
+      .map((discount) => discount.code);
+    const nextCart = await updateShopifyCartDiscountCodes(currentCart.id, remainingCodes);
     saveCart(nextCart);
   }), [runMutation, saveCart]);
 
@@ -163,6 +201,8 @@ export function CartProvider({ children }) {
     subtotal: cart?.subtotal || 0,
     total: cart?.total || 0,
     currencyCode: cart?.currencyCode || 'INR',
+    discountCodes: cart?.discountCodes || [],
+    hasUnavailableItems: cartHasUnavailableItems(cart?.items || []),
     checkoutUrl: cart?.checkoutUrl || '',
     isCartOpen,
     setIsCartOpen,
@@ -173,8 +213,10 @@ export function CartProvider({ children }) {
     addToCart,
     removeFromCart,
     updateQuantity,
+    applyDiscountCode,
+    removeDiscountCode,
     inCart
-  }), [cart, isCartOpen, isLoading, isBusy, error, addToCart, removeFromCart, updateQuantity, inCart]);
+  }), [cart, isCartOpen, isLoading, isBusy, error, addToCart, removeFromCart, updateQuantity, applyDiscountCode, removeDiscountCode, inCart]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

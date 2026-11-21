@@ -12,6 +12,7 @@ export default function Shop() {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [status, setStatus] = useState('All products');
+  const [availability, setAvailability] = useState('All availability');
   const [category, setCategory] = useState(selectedCategory || 'all');
   const [sort, setSort] = useState('latest');
   const [itemsToShow, setItemsToShow] = useState(6);
@@ -63,22 +64,35 @@ export default function Shop() {
 
   const filteredProducts = useMemo(() => products.filter((product) => {
     const query = search.trim().toLowerCase();
-    const matchesSearch = !query || [product.name, product.category, product.description].some((value) => value.toLowerCase().includes(query));
-    const matchesCategory = category === 'all' || product.category.toLowerCase() === category.toLowerCase();
+    const matchesSearch = !query || [product.name, product.category, product.description, ...(product.tags || [])]
+      .filter(Boolean)
+      .some((value) => String(value).toLowerCase().includes(query));
+    const matchesCategory = category === 'all' || product.category?.toLowerCase() === category.toLowerCase()
+      || product.collections?.some(({ handle, title }) =>
+        handle.toLowerCase() === category.toLowerCase()
+        || title.toLowerCase() === category.toLowerCase()
+      );
     const matchesStatus = status === 'All products' || (status === 'New arrivals' && product.badge === 'New Launch') || (status === 'Best sellers' && product.badge === 'Best Seller');
+    const matchesAvailability = availability === 'All availability'
+      || (availability === 'In stock' && product.availableForSale !== false)
+      || (availability === 'Sold out' && product.availableForSale === false);
     const matchesMin = !minPrice || product.price >= Number(minPrice);
     const matchesMax = !maxPrice || product.price <= Number(maxPrice);
-    return matchesSearch && matchesCategory && matchesStatus && matchesMin && matchesMax;
-  }), [products, search, minPrice, maxPrice, status, category]);
+    return matchesSearch && matchesCategory && matchesStatus && matchesAvailability && matchesMin && matchesMax;
+  }), [products, search, minPrice, maxPrice, status, availability, category]);
 
   const sortedProducts = useMemo(() => [...filteredProducts].sort((first, second) => {
     if (sort === 'low') return first.price - second.price;
     if (sort === 'high') return second.price - first.price;
+    if (sort === 'name') return first.name.localeCompare(second.name);
     return new Date(second.createdAt || 0).getTime() - new Date(first.createdAt || 0).getTime() || second.id - first.id;
   }), [filteredProducts, sort]);
 
   const displayedProducts = sortedProducts.slice(0, itemsToShow);
-  const title = selectedCategory ? selectedCategory : 'All Fragrances';
+  const title = categories.find((item) =>
+    typeof item !== 'string'
+    && (item.value === selectedCategory || item.value.toLowerCase() === selectedCategory?.toLowerCase())
+  )?.label || selectedCategory || 'All Fragrances';
 
   return (
     <>
@@ -114,9 +128,28 @@ export default function Shop() {
                 <FilterOptions options={['All products', 'New arrivals', 'Best sellers']} value={status} onChange={setStatus} name="status" />
               </FilterWidget>
 
+              <FilterWidget icon={<CheckCircle2 size={17} />} title="Availability">
+                <FilterOptions options={['All availability', 'In stock', 'Sold out']} value={availability} onChange={setAvailability} name="availability" />
+              </FilterWidget>
+
               <FilterWidget icon={<Tag size={17} />} title="Categories">
                 <FilterOptions options={categories} value={category} onChange={setCategory} name="category" />
               </FilterWidget>
+              <button
+                type="button"
+                className="clear-shop-filters"
+                onClick={() => {
+                  setSearch('');
+                  setMinPrice('');
+                  setMaxPrice('');
+                  setStatus('All products');
+                  setAvailability('All availability');
+                  setCategory('all');
+                  setSort('latest');
+                }}
+              >
+                Clear filters
+              </button>
             </aside>
 
 
@@ -131,6 +164,7 @@ export default function Shop() {
                     <option value="latest">Sort by latest</option>
                     <option value="low">Price: low to high</option>
                     <option value="high">Price: high to low</option>
+                    <option value="name">Name: A to Z</option>
                   </select>
                 </label>
                 <label>Show:

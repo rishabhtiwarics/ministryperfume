@@ -69,6 +69,9 @@ export default function PrivacyPolicy() {
                 <p>
                   We use secure connections for data transfers. When you continue to checkout, Shopify and the payment providers available there process your payment information; this website does not collect or store your card details.
                 </p>
+                <p>
+                  When you sign in, Shopify authenticates your customer account. This storefront uses Shopify's Customer Account API to display your profile and recent orders. The customer access token is kept in this browser tab's session storage and is removed when you sign out or the browser session ends.
+                </p>
               </div>
 
               <div className="policy-block">

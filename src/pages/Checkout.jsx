@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import { formatMoney, useCart } from '../context/CartContext.jsx';
 
 export default function Checkout() {
-  const { items, total, currencyCode, checkoutUrl, isLoading, isBusy, error, clearError } = useCart();
+  const { items, total, currencyCode, checkoutUrl, isLoading, isBusy, hasUnavailableItems, error, clearError } = useCart();
 
   const continueToCheckout = () => {
-    if (!checkoutUrl || isBusy || isLoading) return;
+    if (!checkoutUrl || isBusy || isLoading || hasUnavailableItems) return;
     window.location.assign(checkoutUrl);
   };
 
@@ -67,16 +67,19 @@ export default function Checkout() {
               </div>
               <p className="review-notice">Shipping, taxes, and available payment methods are calculated at Shopify checkout.</p>
               {items.length > 0 && (
-                <button
-                  type="button"
-                  className="checkout-place-order-btn"
-                  disabled={isLoading || isBusy || !checkoutUrl}
-                  onClick={continueToCheckout}
-                >
-                  <Lock size={16} />
-                  <span>{isBusy ? 'Updating cart…' : 'Continue to secure checkout'}</span>
-                  <ArrowRight size={18} />
-                </button>
+                <>
+                  {hasUnavailableItems && <p className="cart-availability" role="alert">Remove sold-out items from your cart before continuing.</p>}
+                  <button
+                    type="button"
+                    className="checkout-place-order-btn"
+                    disabled={isLoading || isBusy || !checkoutUrl || hasUnavailableItems}
+                    onClick={continueToCheckout}
+                  >
+                    <Lock size={16} />
+                    <span>{hasUnavailableItems ? 'Remove sold-out items to continue' : isBusy ? 'Updating cart…' : 'Continue to secure checkout'}</span>
+                    <ArrowRight size={18} />
+                  </button>
+                </>
               )}
               {!items.length && !isLoading && <Link to="/shop" className="primary-btn">Explore fragrances</Link>}
             </div>
